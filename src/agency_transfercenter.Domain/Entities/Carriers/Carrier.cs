@@ -9,8 +9,7 @@ namespace agency_transfercenter.Entities.Carriers
 {
   public class Carrier
   {
-    public bool IsActive { get; set; }
-
+    
 
     protected Carrier()
     {

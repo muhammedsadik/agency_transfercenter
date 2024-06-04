@@ -12,6 +12,7 @@ namespace agency_transfercenter.Entities.Commons
   public class Common : FullAuditedAggregateRoot<int>
   {
     public string Name { get; set; }
+    public bool IsActive { get; set; }
     public CarrierType? CarrierType { get; set; }
 
   }
