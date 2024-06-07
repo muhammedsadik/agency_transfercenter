@@ -7,67 +7,69 @@ namespace agency_transfercenter;
 
 public static class agency_transfercenterModuleExtensionConfigurator
 {
-    private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
+  private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
 
-    public static void Configure()
+  public static void Configure()
+  {
+    OneTimeRunner.Run(() =>
     {
-        OneTimeRunner.Run(() =>
-        {
-            ConfigureExistingProperties();
-            ConfigureExtraProperties();
-        });
-    }
+      ConfigureExistingProperties();
+      ConfigureExtraProperties();
+    });
+  }
 
-    private static void ConfigureExistingProperties()
-    {
-        /* You can change max lengths for properties of the
-         * entities defined in the modules used by your application.
-         *
-         * Example: Change user and role name max lengths
+  private static void ConfigureExistingProperties()
+  {
+    /* You can change max lengths for properties of the
+     * entities defined in the modules used by your application.
+     *
+     * Example: Change user and role name max lengths
 
-           AbpUserConsts.MaxNameLength = 99;
-           IdentityRoleConsts.MaxNameLength = 99;
+       AbpUserConsts.MaxNameLength = 99;
+       IdentityRoleConsts.MaxNameLength = 99;
 
-         * Notice: It is not suggested to change property lengths
-         * unless you really need it. Go with the standard values wherever possible.
-         *
-         * If you are using EF Core, you will need to run the add-migration command after your changes.
-         */
-    }
+     * Notice: It is not suggested to change property lengths
+     * unless you really need it. Go with the standard values wherever possible.
+     *
+     * If you are using EF Core, you will need to run the add-migration command after your changes.
+     */
+  }
 
-    private static void ConfigureExtraProperties()
-    {
-        /* You can configure extra properties for the
-         * entities defined in the modules used by your application.
-         *
-         * This class can be used to define these extra properties
-         * with a high level, easy to use API.
-         *
-         * Example: Add a new property to the user entity of the identity module
-
-           ObjectExtensionManager.Instance.Modules()
-              .ConfigureIdentity(identity =>
+  private static void ConfigureExtraProperties()
+  {
+    //USER EXTEND ETTİK
+    ObjectExtensionManager.Instance.Modules()
+       .ConfigureIdentity(identity =>
+       {
+         identity.ConfigureUser(user =>
+         {                  //property type: string
+           user.AddOrUpdateProperty<string>("SocialSecurityNumber", //property name
+              property =>
               {
-                  identity.ConfigureUser(user =>
-                  {
-                      user.AddOrUpdateProperty<string>( //property type: string
-                          "SocialSecurityNumber", //property name
-                          property =>
-                          {
-                              //validation rules
-                              property.Attributes.Add(new RequiredAttribute());
-                              property.Attributes.Add(new StringLengthAttribute(64) {MinimumLength = 4});
-                              
-                              property.Configuration[IdentityModuleExtensionConsts.ConfigurationNames.AllowUserToEdit] = true;
+                //validation rules
+                property.Attributes.Add(new RequiredAttribute());
+                property.Attributes.Add(new StringLengthAttribute(64) { MinimumLength = 4 });
 
-                              //...other configurations for this property
-                          }
-                      );
-                  });
+                property.Configuration[IdentityModuleExtensionConsts.ConfigurationNames.AllowUserToEdit] = true;
+
+                //...other configurations for this property
               });
+         });
+       });
 
-         * See the documentation for more:
-         * https://docs.abp.io/en/abp/latest/Module-Entity-Extensions
-         */
-    }
+
+
+    /* You can configure extra properties for the
+     * entities defined in the modules used by your application.
+     *
+     * This class can be used to define these extra properties
+     * with a high level, easy to use API.
+     *
+     * Example: Add a new property to the user entity of the identity module
+
+
+     * See the documentation for more:
+     * https://docs.abp.io/en/abp/latest/Module-Entity-Extensions
+     */
+  }
 }
