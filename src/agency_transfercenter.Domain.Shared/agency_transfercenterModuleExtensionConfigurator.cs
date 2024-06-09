@@ -38,24 +38,24 @@ public static class agency_transfercenterModuleExtensionConfigurator
   private static void ConfigureExtraProperties()
   {
     //USER EXTEND ETTİK
-    ObjectExtensionManager.Instance.Modules()
-       .ConfigureIdentity(identity =>
-       {
-         identity.ConfigureUser(user =>
-         {                  //property type: string
-           user.AddOrUpdateProperty<string>("SocialSecurityNumber", //property name
-              property =>
-              {
-                //validation rules
-                property.Attributes.Add(new RequiredAttribute());
-                property.Attributes.Add(new StringLengthAttribute(64) { MinimumLength = 4 });
+    //ObjectExtensionManager.Instance.Modules()
+    //   .ConfigureIdentity(identity =>
+    //   {
+    //     identity.ConfigureUser(user =>
+    //     {                  //property type: string
+    //       user.AddOrUpdateProperty<string>("SocialSecurityNumber", //property name
+    //          property =>
+    //          {
+    //            //validation rules
+    //            property.Attributes.Add(new RequiredAttribute());
+    //            property.Attributes.Add(new StringLengthAttribute(64) { MinimumLength = 4 });
 
-                property.Configuration[IdentityModuleExtensionConsts.ConfigurationNames.AllowUserToEdit] = true;
+    //            property.Configuration[IdentityModuleExtensionConsts.ConfigurationNames.AllowUserToEdit] = true;
 
-                //...other configurations for this property
-              });
-         });
-       });
+    //            //...other configurations for this property
+    //          });
+    //     });
+    //   });
 
 
 

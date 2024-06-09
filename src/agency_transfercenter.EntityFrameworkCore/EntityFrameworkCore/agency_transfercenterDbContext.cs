@@ -1,5 +1,5 @@
 ﻿using agency_transfercenter.Entities.Agencies;
-using agency_transfercenter.Entities.Carriers;
+using agency_transfercenter.Entities.Lines;
 using agency_transfercenter.Entities.TransferCenters;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -36,7 +36,7 @@ public class agency_transfercenterDbContext :
   //Identity
   public DbSet<TransferCenter> TransferCenters { get; set; }
   public DbSet<Agency> Agencies { get; set; }
-  public DbSet<Carrier> Carriers { get; set; }
+  public DbSet<Line> Lines { get; set; }
 
   public DbSet<IdentityUser> Users { get; set; }
   public DbSet<IdentityRole> Roles { get; set; }
@@ -75,19 +75,17 @@ public class agency_transfercenterDbContext :
 
     /* Configure your own tables/entities inside here */
 
-    builder.Entity<Carrier>(b =>
+    builder.Entity<Line>(b =>
     {
-      b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Carriers", agency_transfercenterConsts.DbSchema);
-      b.Property(x => x.Name).IsRequired().HasMaxLength(128);
-      b.HasIndex(x => x.Name).IsUnique();
-      b.Property(x=>x.CarrierType).IsRequired();
-      b.ConfigureByConvention(); 
+      b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Lines", agency_transfercenterConsts.DbSchema);
+      b.Property(x=>x.LineType).IsRequired();
+      //b.HasMany(x => x.Station).WithMany(x => x.Line);  // Get from Blog
+      b.ConfigureByConvention();
     });
     
     builder.Entity<Agency>(b =>
     {
       b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Agencies", agency_transfercenterConsts.DbSchema);
-      b.Property(x => x.Name).IsRequired().HasMaxLength(128);
       b.Property(x=>x.TransferCenterId).IsRequired();
       b.ConfigureByConvention(); 
     });
@@ -95,7 +93,6 @@ public class agency_transfercenterDbContext :
     builder.Entity<TransferCenter>(b =>
     {
       b.ToTable(agency_transfercenterConsts.DbTablePrefix + "TransferCenters", agency_transfercenterConsts.DbSchema);
-      b.Property(x => x.Name).IsRequired().HasMaxLength(128);
       b.ConfigureByConvention(); 
     });
 

@@ -1,4 +1,5 @@
-﻿using agency_transfercenter.Entities.Commons;
+﻿using agency_transfercenter.Entities.Units;
+using agency_transfercenter.Entities.TransferCenters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,17 +9,18 @@ using System.Threading.Tasks;
 
 namespace agency_transfercenter.Entities.Agencies
 {
-  public class Agency : CommonEntity
+  public class Agency : Unit
   {
 
-    public int TransferCenterId { get; internal set; }
-    public string Address { get; set; }
+    public int TransferCenterId { get; set; }
+    public TransferCenter TransferCenter { get; set; }
 
-    internal Agency(int transferCenterId, string address)
+
+    private Agency()
     {
-      TransferCenterId = transferCenterId;
-      Address = address;
     }
+
+
 
 
 

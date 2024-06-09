@@ -4,8 +4,8 @@ using System.Text;
 
 namespace agency_transfercenter.Entities.Common
 {
-  public class CommonEntityConst
+  public static class CommonEntityConst
   {
-    public static int MaxNameLength = 128;
+    public const int MaxNameLength = 128;
   }
 }
