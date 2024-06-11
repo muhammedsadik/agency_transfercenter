@@ -1,6 +1,10 @@
-﻿using agency_transfercenter.Entities.Agencies;
+﻿using agency_transfercenter.Entities.Addresses;
+using agency_transfercenter.Entities.Agencies;
+using agency_transfercenter.Entities.LineConsts;
 using agency_transfercenter.Entities.Lines;
+using agency_transfercenter.Entities.Stations;
 using agency_transfercenter.Entities.TransferCenters;
+using agency_transfercenter.Entities.Units;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -37,6 +41,8 @@ public class agency_transfercenterDbContext :
   public DbSet<TransferCenter> TransferCenters { get; set; }
   public DbSet<Agency> Agencies { get; set; }
   public DbSet<Line> Lines { get; set; }
+  public DbSet<Unit> Units { get; set; }
+  public DbSet<Station> Stations { get; set; }
 
   public DbSet<IdentityUser> Users { get; set; }
   public DbSet<IdentityRole> Roles { get; set; }
@@ -78,25 +84,50 @@ public class agency_transfercenterDbContext :
     builder.Entity<Line>(b =>
     {
       b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Lines", agency_transfercenterConsts.DbSchema);
-      b.Property(x=>x.LineType).IsRequired();
+      b.ConfigureByConvention();
+
+      b.Property(x => x.Name).IsRequired().HasMaxLength(LineConst.MaxNameLength);
+      b.HasIndex(x => x.Name).IsUnique();
+      b.Property(x => x.LineType).IsRequired();
+
+      b.HasMany(x => x.Stations).WithOne().HasForeignKey(x => x.UnitId).IsRequired();
+
       //b.HasMany(x => x.Station).WithMany(x => x.Line);  // Get from Blog
+
+    });
+
+
+    builder.Entity<Station>(b =>
+    {
+      b.HasKey(x => new { x.UnitId, x.LineId });
+      b.HasOne(x => x.Line).WithMany(x => x.Stations).HasForeignKey(x => x.LineId);
+      b.HasOne(x => x.Unit).WithMany(x => x.Stations).HasForeignKey(x => x.UnitId);
+
+      //b.Property(x => x.StationNumber).UseIdentityColumn().IsRequired();
+
+      b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Stations", agency_transfercenterConsts.DbSchema);
       b.ConfigureByConvention();
     });
-    
+
+
     builder.Entity<Agency>(b =>
     {
-      b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Agencies", agency_transfercenterConsts.DbSchema);
-      b.Property(x=>x.TransferCenterId).IsRequired();
-      b.ConfigureByConvention(); 
+      b.HasOne(x => x.TransferCenter).WithMany(x => x.Agencies).HasForeignKey(x => x.TransferCenterId);
+
+
+      b.OwnsOne(x => x.Address);
+
+      //b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Agencies", agency_transfercenterConsts.DbSchema);
+      //b.Property(x => x.TransferCenterId).IsRequired();
+      //b.ConfigureByConvention();
     });
-    
+
     builder.Entity<TransferCenter>(b =>
     {
-      b.ToTable(agency_transfercenterConsts.DbTablePrefix + "TransferCenters", agency_transfercenterConsts.DbSchema);
-      b.ConfigureByConvention(); 
+      b.OwnsOne(x => x.Address);
+
+      //  b.ToTable(agency_transfercenterConsts.DbTablePrefix + "TransferCenters", agency_transfercenterConsts.DbSchema);
+      //  b.ConfigureByConvention();
     });
-
-
-
   }
 }

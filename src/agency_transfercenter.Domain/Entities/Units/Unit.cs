@@ -20,9 +20,9 @@ namespace agency_transfercenter.Entities.Units
     public string ManagerSurname { get; set; }
     public string ManagerGsm { get; set; }
     public string UnitPhone { get; set; }
-    public string ManagerMail { get; set; }
     public string UnitMail { get; set; }
-
+    public string ManagerMail { get; set; }
+    public ICollection<Station> Stations { get; set; }
 
     public Address Address { get; set; }
 

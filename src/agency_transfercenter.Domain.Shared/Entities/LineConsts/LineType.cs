@@ -6,7 +6,7 @@ namespace agency_transfercenter.Entities.LineConsts
 {
     public enum LineType
     {
-        MainShipping,
-        SubShipping
+        MainLine,
+        SubLine
     }
 }

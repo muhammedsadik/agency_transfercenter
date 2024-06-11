@@ -8,5 +8,7 @@ namespace agency_transfercenter.Entities.LineConsts
   {
     public const int LimitOfStation = 10;
     public const int LimitOfLineRoute = 10;
+    public const int MaxNameLength = 128;
+
   }
 }
