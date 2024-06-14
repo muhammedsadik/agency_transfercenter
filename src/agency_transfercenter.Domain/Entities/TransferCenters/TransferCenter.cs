@@ -13,7 +13,7 @@ namespace agency_transfercenter.Entities.TransferCenters
   {
     public ICollection<Agency> Agencies { get; set; }
 
-    private TransferCenter()
+    internal TransferCenter()
     {
     }
 

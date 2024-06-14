@@ -1801,7 +1801,10 @@ namespace agency_transfercenter.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("StationNumber")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StationNumber"));
 
                     b.HasKey("UnitId", "LineId");
 

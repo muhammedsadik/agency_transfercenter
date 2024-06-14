@@ -79,7 +79,6 @@ public class agency_transfercenterDbContext :
     builder.ConfigureFeatureManagement();
     builder.ConfigureTenantManagement();
 
-    /* Configure your own tables/entities inside here */
 
     builder.Entity<Line>(b =>
     {
@@ -92,7 +91,7 @@ public class agency_transfercenterDbContext :
 
       b.HasMany(x => x.Stations).WithOne().HasForeignKey(x => x.UnitId).IsRequired();
 
-      //b.HasMany(x => x.Station).WithMany(x => x.Line);  // Get from Blog
+      //b.HasMany(x => x.Station).WithMany(x => x.Line);  //many-to-many
 
     });
 
@@ -103,8 +102,6 @@ public class agency_transfercenterDbContext :
       b.HasOne(x => x.Line).WithMany(x => x.Stations).HasForeignKey(x => x.LineId);
       b.HasOne(x => x.Unit).WithMany(x => x.Stations).HasForeignKey(x => x.UnitId);
 
-      //b.Property(x => x.StationNumber).UseIdentityColumn().IsRequired();
-
       b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Stations", agency_transfercenterConsts.DbSchema);
       b.ConfigureByConvention();
     });
@@ -114,20 +111,14 @@ public class agency_transfercenterDbContext :
     {
       b.HasOne(x => x.TransferCenter).WithMany(x => x.Agencies).HasForeignKey(x => x.TransferCenterId);
 
+      b.Property(x => x.TransferCenterId).IsRequired();
 
       b.OwnsOne(x => x.Address);
-
-      //b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Agencies", agency_transfercenterConsts.DbSchema);
-      //b.Property(x => x.TransferCenterId).IsRequired();
-      //b.ConfigureByConvention();
     });
 
     builder.Entity<TransferCenter>(b =>
     {
       b.OwnsOne(x => x.Address);
-
-      //  b.ToTable(agency_transfercenterConsts.DbTablePrefix + "TransferCenters", agency_transfercenterConsts.DbSchema);
-      //  b.ConfigureByConvention();
     });
   }
 }

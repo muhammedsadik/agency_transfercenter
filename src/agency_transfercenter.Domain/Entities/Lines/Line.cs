@@ -22,15 +22,15 @@ namespace agency_transfercenter.Entities.Lines
 
     //public int[] UnitId { get; set; } = new int[LineConst.LimitOfLineRoute];//StationNumber olabilir
 
-    private Line()
+    internal Line()
     {
     }
 
-    public Line AddLine(string name, bool isActive, LineType lineType)
+    public Line AddLine(string name, bool isActive, LineType type)
     {
       Name = name;
       IsActive = isActive;
-      LineType = lineType;
+      LineType = type;
 
       Stations = new List<Station>();
 
@@ -54,7 +54,7 @@ namespace agency_transfercenter.Entities.Lines
     {
       Check.NotNull(unitId, nameof(unitId));
 
-      if (Stations.Count >= 10)
+      if (Stations.Count >= 10 || IsActive) //Line aktif ise ekleme yapılabilsin
         throw new UserFriendlyException("BURADA SABİT MESAJ KULLANILACAK");
 
       if (IsInStation(unitId))

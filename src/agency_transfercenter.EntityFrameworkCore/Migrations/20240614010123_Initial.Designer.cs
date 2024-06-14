@@ -13,7 +13,7 @@ using agency_transfercenter.EntityFrameworkCore;
 namespace agency_transfercenter.Migrations
 {
     [DbContext(typeof(agency_transfercenterDbContext))]
-    [Migration("20240603011701_Initial")]
+    [Migration("20240614010123_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -1768,6 +1768,165 @@ namespace agency_transfercenter.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
+            modelBuilder.Entity("agency_transfercenter.Entities.Lines.Line", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LineType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("AppLines", (string)null);
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.Stations.Station", b =>
+                {
+                    b.Property<int>("UnitId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LineId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StationNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StationNumber"));
+
+                    b.HasKey("UnitId", "LineId");
+
+                    b.HasIndex("LineId");
+
+                    b.ToTable("AppStations", (string)null);
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.Units.Unit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("ManagerGsm")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ManagerMail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ManagerName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ManagerSurname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UnitMail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UnitName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UnitPhone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Units");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Unit");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.Agencies.Agency", b =>
+                {
+                    b.HasBaseType("agency_transfercenter.Entities.Units.Unit");
+
+                    b.Property<int>("TransferCenterId")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("TransferCenterId");
+
+                    b.HasDiscriminator().HasValue("Agency");
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.TransferCenters.TransferCenter", b =>
+                {
+                    b.HasBaseType("agency_transfercenter.Entities.Units.Unit");
+
+                    b.HasDiscriminator().HasValue("TransferCenter");
+                });
+
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
                 {
                     b.HasOne("Volo.Abp.AuditLogging.AuditLog", null)
@@ -1910,6 +2069,66 @@ namespace agency_transfercenter.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("agency_transfercenter.Entities.Stations.Station", b =>
+                {
+                    b.HasOne("agency_transfercenter.Entities.Lines.Line", "Line")
+                        .WithMany("Stations")
+                        .HasForeignKey("LineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("agency_transfercenter.Entities.Units.Unit", "Unit")
+                        .WithMany("Stations")
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Line");
+
+                    b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.Units.Unit", b =>
+                {
+                    b.OwnsOne("agency_transfercenter.Entities.Addresses.Address", "Address", b1 =>
+                        {
+                            b1.Property<int>("UnitId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int>("Number")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("UnitId");
+
+                            b1.ToTable("Units");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UnitId");
+                        });
+
+                    b.Navigation("Address")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.Agencies.Agency", b =>
+                {
+                    b.HasOne("agency_transfercenter.Entities.TransferCenters.TransferCenter", "TransferCenter")
+                        .WithMany("Agencies")
+                        .HasForeignKey("TransferCenterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TransferCenter");
+                });
+
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
                 {
                     b.Navigation("Actions");
@@ -1948,6 +2167,21 @@ namespace agency_transfercenter.Migrations
             modelBuilder.Entity("Volo.Abp.TenantManagement.Tenant", b =>
                 {
                     b.Navigation("ConnectionStrings");
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.Lines.Line", b =>
+                {
+                    b.Navigation("Stations");
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.Units.Unit", b =>
+                {
+                    b.Navigation("Stations");
+                });
+
+            modelBuilder.Entity("agency_transfercenter.Entities.TransferCenters.TransferCenter", b =>
+                {
+                    b.Navigation("Agencies");
                 });
 #pragma warning restore 612, 618
         }

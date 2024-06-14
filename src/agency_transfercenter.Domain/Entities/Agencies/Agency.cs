@@ -16,7 +16,7 @@ namespace agency_transfercenter.Entities.Agencies
     public TransferCenter TransferCenter { get; set; }
 
 
-    private Agency()
+    internal Agency()
     {
     }
 

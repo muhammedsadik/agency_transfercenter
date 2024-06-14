@@ -16,10 +16,10 @@ namespace agency_transfercenter.Entities.Stations
     public Unit Unit { get; set; }
     public int LineId { get; set; }
     public Line Line { get; set; }
-    
 
 
-    private Station() { }
+
+    internal Station() { }
 
 
     public Station(int lineId, int initId)
@@ -28,11 +28,11 @@ namespace agency_transfercenter.Entities.Stations
       UnitId = lineId;
     }
 
-    public Station(int lineId, int initId, int stationNumber)
+    internal Station(int lineId, int unitId, int stationNumber)
     {
-      LineId = initId;
-      UnitId = lineId;
-      StationNumber = stationNumber;//bunu burada yaparken update için  kullana bilirsin ve bu key bilgisini de sorgu için kullana bilirsin
+      LineId = lineId;
+      UnitId = unitId;
+      StationNumber = stationNumber; //bunu burada yaparken update için  kullana bilirsin ve bu key bilgisini de sorgu için kullana bilirsin
     }
 
 
