@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using agency_transfercenter.Entities.LineConsts;
 using agency_transfercenter.Entities.Units;
 using agency_transfercenter.Entities.Stations;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Auditing;
 using System.Collections.ObjectModel;
 using Volo.Abp;
+using agency_transfercenter.EntityConsts.LineConsts;
 
 namespace agency_transfercenter.Entities.Lines
 {
@@ -20,7 +20,6 @@ namespace agency_transfercenter.Entities.Lines
     public LineType LineType { get; set; }
     public ICollection<Station> Stations { get; private set; }
 
-    //public int[] UnitId { get; set; } = new int[LineConst.LimitOfLineRoute];//StationNumber olabilir
 
     internal Line()
     {
@@ -41,7 +40,7 @@ namespace agency_transfercenter.Entities.Lines
     {
       IsActive = isActive;
     }
-    
+
     public void SetName(string name)
     {
       Name = name;
@@ -54,7 +53,7 @@ namespace agency_transfercenter.Entities.Lines
     {
       Check.NotNull(unitId, nameof(unitId));
 
-      if (Stations.Count >= 10 || IsActive) //Line aktif ise ekleme yapılabilsin
+      if (Stations.Count >= 10 || !IsActive) //Line aktif ise ekleme yapılabilsin
         throw new UserFriendlyException("BURADA SABİT MESAJ KULLANILACAK");
 
       if (IsInStation(unitId))

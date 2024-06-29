@@ -1,10 +1,10 @@
 ﻿using agency_transfercenter.Entities.Addresses;
 using agency_transfercenter.Entities.Agencies;
-using agency_transfercenter.Entities.LineConsts;
 using agency_transfercenter.Entities.Lines;
 using agency_transfercenter.Entities.Stations;
 using agency_transfercenter.Entities.TransferCenters;
 using agency_transfercenter.Entities.Units;
+using agency_transfercenter.EntityConsts.LineConsts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -56,6 +56,7 @@ public class agency_transfercenterDbContext :
   public DbSet<Tenant> Tenants { get; set; }
   public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
+
   #endregion
 
   public agency_transfercenterDbContext(DbContextOptions<agency_transfercenterDbContext> options)
@@ -92,7 +93,6 @@ public class agency_transfercenterDbContext :
       b.HasMany(x => x.Stations).WithOne().HasForeignKey(x => x.UnitId).IsRequired();
 
       //b.HasMany(x => x.Station).WithMany(x => x.Line);  //many-to-many
-
     });
 
 

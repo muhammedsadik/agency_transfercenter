@@ -1,5 +1,4 @@
 ﻿using agency_transfercenter.Entities.Addresses;
-using agency_transfercenter.Entities.Common;
 using agency_transfercenter.Entities.Stations;
 using System;
 using System.Collections.Generic;
@@ -16,23 +15,21 @@ namespace agency_transfercenter.Entities.Units
   {
 
     public string UnitName { get; set; }
+    public string UnitPhone { get; set; }
+    public string UnitMail { get; set; }
     public string ManagerName { get; set; }
     public string ManagerSurname { get; set; }
-    public string ManagerGsm { get; set; }//özel karekter olmayacak
-    public string UnitPhone { get; set; }
+    public string ManagerGsm { get; set; }
     public string ManagerMail { get; set; }
-    public string UnitMail { get; set; }
-    public ICollection<Station> Stations { get; set; }
 
     public Address Address { get; set; }
+
+    public ICollection<Station> Stations { get; set; }
 
 
     internal Unit()
     {
     }
-
-
-
 
 
   }

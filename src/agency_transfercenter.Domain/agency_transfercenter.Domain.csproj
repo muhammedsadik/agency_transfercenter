@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\agency_transfercenter.Application.Contracts\agency_transfercenter.Application.Contracts.csproj" />
     <ProjectReference Include="..\agency_transfercenter.Domain.Shared\agency_transfercenter.Domain.Shared.csproj" />
   </ItemGroup>
 

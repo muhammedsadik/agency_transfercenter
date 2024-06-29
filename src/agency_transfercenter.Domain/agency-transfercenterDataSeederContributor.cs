@@ -1,10 +1,10 @@
 ﻿using agency_transfercenter.Entities.Addresses;
 using agency_transfercenter.Entities.Agencies;
-using agency_transfercenter.Entities.LineConsts;
 using agency_transfercenter.Entities.Lines;
 using agency_transfercenter.Entities.Stations;
 using agency_transfercenter.Entities.TransferCenters;
 using agency_transfercenter.Entities.Units;
+using agency_transfercenter.EntityConsts.LineConsts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace agency_transfercenter
 {
-  public class agency_transfercenterDataSeederContributor : IDataSeedContributor, ITransientDependency
+    public class agency_transfercenterDataSeederContributor : IDataSeedContributor, ITransientDependency
   {
     private readonly IRepository<TransferCenter, int> _transferCenterRepository;
     private readonly IRepository<Agency, int> _agencyRepository;

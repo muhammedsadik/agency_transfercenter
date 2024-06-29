@@ -1,18 +1,17 @@
 {
   "culture": "en",
-  "texts": 
-  {
+  "texts": {
     "Menu:Home": "Home",
     "Welcome": "Welcome",
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
 
 
-    "AgencyTransfercenter:00001": "There is already an Transfer Ceneter with the same name: {name}"
+    "AgencyTransfercenter:00001": "There is already an Transfer Ceneter with the same name: {name}",
 
-
-
-
-
-
+    "Permission:TransferCenterAndAgency": "Transfer Center And Agency",
+    "Permission:Transfercenters": "Transfer centers Management",
+    "Permission:Transfercenters.Create": "Creating new transfer center",
+    "Permission:Transfercenters.Edit": "Editing the transfer center",
+    "Permission:Transfercenters.Delete": "Deleting the transfer center"
   }
 }

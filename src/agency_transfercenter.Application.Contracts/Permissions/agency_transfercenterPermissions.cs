@@ -2,8 +2,17 @@
 
 public static class agency_transfercenterPermissions
 {
-    public const string GroupName = "agency_transfercenter";
+  public const string GroupName = "TransferCenterAndAgency";
 
-    //Add your own permission names. Example:
-    //public const string MyPermission1 = GroupName + ".MyPermission1";
+  public static class Transfercenters
+  {
+    public const string Default = GroupName + ".Transfercenters";
+    public const string Create = Default + ".Create";
+    public const string Edit = Default + ".Edit";
+    public const string Delete = Default + ".Delete";
+
+  }
+
+
+
 }

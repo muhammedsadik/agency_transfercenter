@@ -1,6 +1,8 @@
 ﻿using Volo.Abp.Account;
+using Volo.Abp.Application;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
+using Volo.Abp.FluentValidation;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
@@ -17,15 +19,17 @@ namespace agency_transfercenter;
     typeof(AbpPermissionManagementApplicationModule),
     typeof(AbpTenantManagementApplicationModule),
     typeof(AbpFeatureManagementApplicationModule),
-    typeof(AbpSettingManagementApplicationModule)
+    typeof(AbpSettingManagementApplicationModule),
+    typeof(AbpFluentValidationModule)
     )]
 public class agency_transfercenterApplicationModule : AbpModule
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+  public override void ConfigureServices(ServiceConfigurationContext context)
+  {
+    Configure<AbpAutoMapperOptions>(options =>
     {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<agency_transfercenterApplicationModule>();
-        });
-    }
+      options.AddMaps<agency_transfercenterApplicationModule>();
+    });
+
+  }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace agency_transfercenter.Entities.LineConsts
+namespace agency_transfercenter.EntityConsts.LineConsts
 {
     public enum LineType
     {
