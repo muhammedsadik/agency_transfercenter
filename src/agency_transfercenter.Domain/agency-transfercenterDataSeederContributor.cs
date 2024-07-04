@@ -69,7 +69,7 @@ namespace agency_transfercenter
           {
             City = "Ankara",
             Street = "polatlı",
-            Number = 471
+            Number = "471"
           }
         },
         autoSave: true
@@ -90,7 +90,7 @@ namespace agency_transfercenter
           {
             City = "İstanbul",
             Street = "Beyoğlu",
-            Number = 83
+            Number = "83"
           }
         },
         autoSave: true
@@ -111,7 +111,7 @@ namespace agency_transfercenter
           {
             City = "Adana",
             Street = "Ceyhan",
-            Number = 826
+            Number = "826"
           }
         },
         autoSave: true
@@ -132,7 +132,7 @@ namespace agency_transfercenter
           {
             City = "Diyarbakır",
             Street = "Yenişehir",
-            Number = 507
+            Number = "507"
           }
         },
         autoSave: true
@@ -165,7 +165,7 @@ namespace agency_transfercenter
           {
             City = "Ankara",
             Street = "Sincan",
-            Number = 911
+            Number = "911"
           }
         },
         autoSave: true
@@ -187,7 +187,7 @@ namespace agency_transfercenter
           {
             City = "İstanbul",
             Street = "Kurtköy",
-            Number = 209
+            Number = "209"
           }
         },
         autoSave: true
@@ -209,7 +209,7 @@ namespace agency_transfercenter
           {
             City = "Adana",
             Street = "Pozantı",
-            Number = 582
+            Number = "582"
           }
         },
         autoSave: true
@@ -231,7 +231,7 @@ namespace agency_transfercenter
           {
             City = "Adana",
             Street = "Aladağ",
-            Number = 388
+            Number = "388"
           }
         },
         autoSave: true
@@ -253,7 +253,7 @@ namespace agency_transfercenter
           {
             City = "Diyarbakır",
             Street = "Bağlar",
-            Number = 342
+            Number = "342"
           }
         },
         autoSave: true
@@ -275,7 +275,7 @@ namespace agency_transfercenter
           {
             City = "Diyarbakır",
             Street = "Suriçi",
-            Number = 089
+            Number = "089"
           }
         },
         autoSave: true
@@ -297,7 +297,7 @@ namespace agency_transfercenter
           {
             City = "Diyarbakır",
             Street = "Hani",
-            Number = 987
+            Number = "987"
           }
         },
         autoSave: true

@@ -5,13 +5,20 @@
     "Welcome": "Welcome",
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
 
-
-    "AgencyTransfercenter:00001": "There is already an Transfer Ceneter with the same name: {name}",
-
     "Permission:TransferCenterAndAgency": "Transfer Center And Agency",
     "Permission:Transfercenters": "Transfer centers Management",
     "Permission:Transfercenters.Create": "Creating new transfer center",
     "Permission:Transfercenters.Edit": "Editing the transfer center",
-    "Permission:Transfercenters.Delete": "Deleting the transfer center"
+    "Permission:Transfercenters.Delete": "Deleting the transfer center",
+
+    "TransferCenter": "Transfer Center",
+
+
+    "agency_transfercenter:501": "There is already {0} with the same name: {1}.",
+    "agency_transfercenter:502": "Maximum request limit exceeded",
+
+
+    "agency_transfercenter:v401": "Please enter a valid phone format. Enter at least 11 digits which starting with 0"
+
   }
 }

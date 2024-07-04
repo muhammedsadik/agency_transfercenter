@@ -23,36 +23,36 @@ namespace agency_transfercenter;
     typeof(AbpOpenIddictDomainSharedModule),
     typeof(AbpPermissionManagementDomainSharedModule),
     typeof(AbpSettingManagementDomainSharedModule),
-    typeof(AbpTenantManagementDomainSharedModule)    
+    typeof(AbpTenantManagementDomainSharedModule)
     )]
 public class agency_transfercenterDomainSharedModule : AbpModule
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context)
+  public override void PreConfigureServices(ServiceConfigurationContext context)
+  {
+    agency_transfercenterGlobalFeatureConfigurator.Configure();
+    agency_transfercenterModuleExtensionConfigurator.Configure();
+  }
+
+  public override void ConfigureServices(ServiceConfigurationContext context)
+  {
+    Configure<AbpVirtualFileSystemOptions>(options =>
     {
-        agency_transfercenterGlobalFeatureConfigurator.Configure();
-        agency_transfercenterModuleExtensionConfigurator.Configure();
-    }
+      options.FileSets.AddEmbedded<agency_transfercenterDomainSharedModule>();
+    });
 
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    Configure<AbpLocalizationOptions>(options =>
     {
-        Configure<AbpVirtualFileSystemOptions>(options =>
-        {
-            options.FileSets.AddEmbedded<agency_transfercenterDomainSharedModule>();
-        });
+      options.Resources
+              .Add<agency_transfercenterResource>("en")
+              .AddBaseTypes(typeof(AbpValidationResource))
+              .AddVirtualJson("/Localization/agency_transfercenter");
 
-        Configure<AbpLocalizationOptions>(options =>
-        {
-            options.Resources
-                .Add<agency_transfercenterResource>("en")
-                .AddBaseTypes(typeof(AbpValidationResource))
-                .AddVirtualJson("/Localization/agency_transfercenter");
+      options.DefaultResourceType = typeof(agency_transfercenterResource);
+    });
 
-            options.DefaultResourceType = typeof(agency_transfercenterResource);
-        });
-
-        Configure<AbpExceptionLocalizationOptions>(options =>
-        {
-            options.MapCodeNamespace("agency_transfercenter", typeof(agency_transfercenterResource));
-        });
-    }
+    Configure<AbpExceptionLocalizationOptions>(options =>
+    {
+      options.MapCodeNamespace("agency_transfercenter", typeof(agency_transfercenterResource));
+    });
+  }
 }

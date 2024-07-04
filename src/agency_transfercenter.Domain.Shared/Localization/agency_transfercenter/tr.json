@@ -4,10 +4,14 @@
     "Menu:Home": "Ana sayfa",
     "Welcome": "Hoşgeldiniz",
     "LongWelcomeMessage": "Uygulamaya hoşgeldiniz. Bu, ABP framework'ü üzerine bina edilmiş bir başlangıç projesidir. Daha fazla bilgi için abp.io adresini ziyaret edebilirsiniz.",
-    
-    "AgencyTransfercenter:00001": "Aynı isimde bir Trasver Merkezi önceden oluşturulmuş: {name}"
-  
-  
-  
+
+    "TransferCenter": "Transfer Merkezi",
+
+    "agency_transfercenter:501": "{1} ile Aynı isimli bir {0} önceden oluşturulmuş.",
+    "agency_transfercenter:502": "Maksimum istek sınırı aşıldı.",
+
+    "agency_transfercenter:v401": "Lütfen geçerli bir telefon numarası formatı giriniz. 0 ile başlayan 11 haneli numara giriniz."
+
+
   }
 }

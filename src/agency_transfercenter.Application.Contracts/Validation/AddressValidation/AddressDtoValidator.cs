@@ -10,8 +10,8 @@ namespace agency_transfercenter.Validation.AddressValidation
   {
     public AddressDtoValidator()
     {
-      RuleFor(x => x.City).NotEmpty().WithMessage("City alanı boş olamaz").Length(4);
-      RuleFor(x => x.Street).NotEmpty();
+      RuleFor(x => x.City).NotEmpty().MinimumLength(3);
+      RuleFor(x => x.Street).NotEmpty().MinimumLength(3);
       RuleFor(x => x.Number).NotEmpty();
     }
   }

@@ -69,7 +69,6 @@ public class agency_transfercenterDbContext :
   {
     base.OnModelCreating(builder);
 
-    /* Include modules to your migration db context */
 
     builder.ConfigurePermissionManagement();
     builder.ConfigureSettingManagement();

@@ -12,7 +12,7 @@ using System.Text;
 
 
 
-namespace agency_transfercenter.TransferCenters
+namespace agency_transfercenter.EntityRepositories.TransferCenters
 {
   public class EfCoreTransferCenterRepository : EfCoreRepository<agency_transfercenterDbContext, TransferCenter, int>, ITransferCenterRepository
   {

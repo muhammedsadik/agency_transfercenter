@@ -9,6 +9,6 @@ using Volo.Abp.Application.Dtos;
 namespace agency_transfercenter.EntityDtos.TransferCenterDtos
 {
   public class TransferCenterDto : UnitDto
-  {    
+  {
   }
 }

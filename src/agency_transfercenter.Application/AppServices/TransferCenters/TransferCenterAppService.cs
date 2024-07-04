@@ -1,4 +1,5 @@
 ﻿using agency_transfercenter.Entities.TransferCenters;
+using agency_transfercenter.EntityDtos.PagedAndSortedDtos;
 using agency_transfercenter.EntityDtos.TransferCenterDtos;
 using agency_transfercenter.Permissions;
 using Microsoft.AspNetCore.Authorization;
@@ -11,12 +12,11 @@ using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Validation;
 
 namespace agency_transfercenter.AppServices.TransferCenters
 {
   [Authorize(agency_transfercenterPermissions.Transfercenters.Default)]
-  public class TransferCenterAppService : CrudAppService<TransferCenter, TransferCenterDto, int, GetTransferCenterListDto, CreateTransferCenterDto, UpdateTransferCenterDto>, ITransferCenterAppService
+  public class TransferCenterAppService : CrudAppService<TransferCenter, TransferCenterDto, int, GetListPagedAndSortedDto, CreateTransferCenterDto, UpdateTransferCenterDto>, ITransferCenterAppService
   {
     private readonly TransferCenterManager _transferCenterManager;
 
@@ -44,25 +44,9 @@ namespace agency_transfercenter.AppServices.TransferCenters
       return transferCenter;
     }
 
-    [Authorize(agency_transfercenterPermissions.Transfercenters.Edit)]
-    public async Task<TransferCenterDto> UpdateManagerOfTransferCenterAsync(int id, UpdateManagerOfTransferCenterDto input)
+    public override async Task<PagedResultDto<TransferCenterDto>> GetListAsync(GetListPagedAndSortedDto input)
     {
-      var transferCenter =await _transferCenterManager.UpdateManagerAsync(id, input);
-
-      return transferCenter;
-    }
-
-    [Authorize(agency_transfercenterPermissions.Transfercenters.Edit)]
-    public async Task<TransferCenterDto> UpdateUnitOfTransferCenterAsync(int id, UpdateUnitOfTransferCenterDto input)
-    {
-      var transferCenter =await _transferCenterManager.UpdateUnitAsync(id, input);
-
-      return transferCenter;
-    }
-
-    public override async Task<PagedResultDto<TransferCenterDto>> GetListAsync(GetTransferCenterListDto input)
-    {
-      var transferCenters =await _transferCenterManager.GetListAsync(input);
+      var transferCenters = await _transferCenterManager.GetListAsync(input);
 
       return transferCenters;
     }

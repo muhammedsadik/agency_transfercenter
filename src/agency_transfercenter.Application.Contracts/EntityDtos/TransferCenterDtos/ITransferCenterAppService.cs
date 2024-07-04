@@ -9,11 +9,8 @@ using Volo.Abp.Application.Services;
 
 namespace agency_transfercenter.EntityDtos.TransferCenterDtos
 {
-  public interface ITransferCenterAppService : ICrudAppService<TransferCenterDto, int, GetTransferCenterListDto, CreateTransferCenterDto, UpdateTransferCenterDto>
+  public interface ITransferCenterAppService : ICrudAppService<TransferCenterDto, int, GetListPagedAndSortedDto, CreateTransferCenterDto, UpdateTransferCenterDto>
   {
-    Task<TransferCenterDto> UpdateUnitOfTransferCenterAsync(int id, UpdateUnitOfTransferCenterDto input);
-    Task<TransferCenterDto> UpdateManagerOfTransferCenterAsync(int id, UpdateManagerOfTransferCenterDto input);
-
     Task DeleteHardAsync(int id);
   }
 }

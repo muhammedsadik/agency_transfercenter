@@ -15,8 +15,6 @@ public class agency_transfercenterApplicationAutoMapperProfile : Profile
     CreateMap<TransferCenter, TransferCenterDto>().ReverseMap();
     CreateMap<UpdateTransferCenterDto, TransferCenter>().ReverseMap();
     CreateMap<CreateTransferCenterDto, TransferCenter>().ReverseMap();
-    CreateMap<UpdateManagerOfTransferCenterDto, TransferCenter>().ReverseMap();
-    CreateMap<UpdateUnitOfTransferCenterDto, TransferCenter>().ReverseMap();
     CreateMap<Address, AddressDto>().ReverseMap();
     CreateMap<Unit, UnitDto>().ReverseMap();
 

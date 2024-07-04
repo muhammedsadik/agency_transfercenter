@@ -10,6 +10,6 @@ namespace agency_transfercenter.EntityDtos.AddressDtos
   {
     public string City { get; set; }
     public string Street { get; set; }
-    public int Number { get; set; }
+    public string Number { get; set; }
   }
 }
