@@ -5,8 +5,23 @@
     "Welcome": "Hoşgeldiniz",
     "LongWelcomeMessage": "Uygulamaya hoşgeldiniz. Bu, ABP framework'ü üzerine bina edilmiş bir başlangıç projesidir. Daha fazla bilgi için abp.io adresini ziyaret edebilirsiniz.",
 
-    "TransferCenter": "Transfer Merkezi",
+    "Permission:TransferCenterAndAgency": "Transfer Merkezi ve Acenta",
 
+    "Permission:Transfercenters": "Transfer merkezi yönetimi",
+    "Permission:Transfercenters.Create": "Transfer merkezi oluşturma",
+    "Permission:Transfercenters.Edit": "Transfer merkezi düzenleme",
+    "Permission:Transfercenters.Delete": "Transfer merkezi silme",
+
+    "Permission:Agencies": "Acenta yönetimi",
+    "Permission:Agencies.Create": "Acenta oluşturma",
+    "Permission:Agencies.Edit": "Acenta düzenleme",
+    "Permission:Agencies.Delete": "Acenta silme",
+
+
+    "TransferCenter": "Transfer Merkezi",
+    "Agency": "Acenta",
+
+    "agency_transfercenter:500": "{0} = {1} Bulunamadı.",
     "agency_transfercenter:501": "{1} ile Aynı isimli bir {0} önceden oluşturulmuş.",
     "agency_transfercenter:502": "Maksimum istek sınırı aşıldı.",
 

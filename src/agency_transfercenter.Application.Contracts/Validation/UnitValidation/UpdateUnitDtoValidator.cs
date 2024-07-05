@@ -15,7 +15,7 @@ namespace agency_transfercenter.Validation.UnitValidation
     {
       RuleFor(x => x.UnitName).NotEmpty().MinimumLength(4);
 
-      RuleFor(x => x.UnitPhone).Matches(@"^0\d{10}$").WithMessage(localizer[TCDomainErrorCodes.NotInPhoneFormat]);
+      RuleFor(x => x.UnitPhone).Matches(@"^0\d{10}$").WithMessage(localizer[AtcDomainErrorCodes.NotInPhoneFormat]);
 
       RuleFor(x => x.UnitMail).NotEmpty();
       RuleFor(x => x.UnitMail).EmailAddress();
@@ -24,7 +24,7 @@ namespace agency_transfercenter.Validation.UnitValidation
 
       RuleFor(x => x.ManagerSurname).NotEmpty();
 
-      RuleFor(x => x.ManagerGsm).Matches(@"^0\d{10}$").WithMessage(localizer[TCDomainErrorCodes.NotInPhoneFormat]);
+      RuleFor(x => x.ManagerGsm).Matches(@"^0\d{10}$").WithMessage(localizer[AtcDomainErrorCodes.NotInPhoneFormat]);
 
       RuleFor(x => x.ManagerMail).NotEmpty();
       RuleFor(x => x.ManagerMail).EmailAddress();

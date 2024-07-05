@@ -11,13 +11,12 @@ using Volo.Abp.Localization;
 
 namespace agency_transfercenter.Entities.Exceptions
 {
-  public class AlreadyExistException : BusinessException, ILocalizeErrorMessage
+  public class NotFoundException : BusinessException, ILocalizeErrorMessage
   {
     public Type EntityType { get; }
-    public string EntityCode { get; }
+    public string EntityCode{ get; }
 
-
-    public AlreadyExistException(Type entityType, string entityCode) : base(AtcDomainErrorCodes.AlreadyExists)
+    public NotFoundException(Type entityType, string entityCode) : base(AtcDomainErrorCodes.NotFound)
     {
       EntityType = entityType;
       EntityCode = entityCode;
@@ -33,17 +32,4 @@ namespace agency_transfercenter.Entities.Exceptions
       return localizer[Code!, Data["EntityType"], Data["EntityCode"]];
     }
   }
-
-
-/*
-   public class AlreadyExistException : BusinessException
-  {
-    public AlreadyExistException(string unit, string name) : base(TCDomainErrorCodes.AlreadyExists)
-    {
-      WithData("unit", name).WithData("name", name);
-    }
-  }     
-*/
-
-
 }

@@ -13,6 +13,15 @@ public static class agency_transfercenterPermissions
 
   }
 
+  public static class Agencies
+  {
+    public const string Default = GroupName + ".Agencies";
+    public const string Create = Default + ".Create";
+    public const string Edit = Default + ".Edit";
+    public const string Delete = Default + ".Delete";
+
+  }
+
 
 
 }

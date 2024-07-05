@@ -6,14 +6,22 @@
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
 
     "Permission:TransferCenterAndAgency": "Transfer Center And Agency",
+
     "Permission:Transfercenters": "Transfer centers Management",
-    "Permission:Transfercenters.Create": "Creating new transfer center",
+    "Permission:Transfercenters.Create": "Creating a new transfer center",
     "Permission:Transfercenters.Edit": "Editing the transfer center",
     "Permission:Transfercenters.Delete": "Deleting the transfer center",
+
+    "Permission:Agencies": "Agency Management",
+    "Permission:Agencies.Create": "Creating new agency",
+    "Permission:Agencies.Edit": "Editing the agency",
+    "Permission:Agencies.Delete": "Deleting the agency",
+
 
     "TransferCenter": "Transfer Center",
 
 
+    "agency_transfercenter:500": "{0} = {1} Not Found.",
     "agency_transfercenter:501": "There is already {0} with the same name: {1}.",
     "agency_transfercenter:502": "Maximum request limit exceeded",
 

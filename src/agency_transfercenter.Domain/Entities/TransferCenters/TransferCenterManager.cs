@@ -31,13 +31,10 @@ namespace agency_transfercenter.Entities.TransferCenters
 
     public async Task<TransferCenterDto> CreateAsync(CreateTransferCenterDto createTransferCenterDto)
     {
-      Check.NotNullOrWhiteSpace(createTransferCenterDto.UnitName, nameof(createTransferCenterDto.UnitName));
+      var IsExistTransferCenter = await _transferCenterRepository.AnyAsync(x => x.UnitName == createTransferCenterDto.UnitName);
 
-      var existingTransferCenter = await _transferCenterRepository.FindAsync(x => x.UnitName == createTransferCenterDto.UnitName);
-
-
-      if (existingTransferCenter != null)
-        throw new AlreadyExistException(typeof(TransferCenter), existingTransferCenter.UnitName);
+      if (IsExistTransferCenter)
+        throw new AlreadyExistException(typeof(TransferCenter), createTransferCenterDto.UnitName);
 
       var createdTransferCenter = _objectMapper.Map<CreateTransferCenterDto, TransferCenter>(createTransferCenterDto);
 
@@ -50,12 +47,10 @@ namespace agency_transfercenter.Entities.TransferCenters
 
     public async Task<TransferCenterDto> UpdateAsync(int id, UpdateTransferCenterDto updateTransferCenter)
     {
-      Check.NotNullOrWhiteSpace(updateTransferCenter.UnitName, nameof(updateTransferCenter.UnitName));
+      var IsExistName = await _transferCenterRepository.AnyAsync(x => x.UnitName == updateTransferCenter.UnitName && x.Id != id);
 
-      var checkNameIsExist = await _transferCenterRepository.FindAsync(x => x.UnitName == updateTransferCenter.UnitName && x.Id != id);
-
-      if (checkNameIsExist != null)
-        throw new AlreadyExistException(typeof(TransferCenter), checkNameIsExist.UnitName);
+      if (IsExistName)
+        throw new AlreadyExistException(typeof(TransferCenter), updateTransferCenter.UnitName);
 
       var existingTransferCenter = await _transferCenterRepository.GetAsync(x => x.Id == id);
 
@@ -70,18 +65,20 @@ namespace agency_transfercenter.Entities.TransferCenters
 
     public async Task<PagedResultDto<TransferCenterDto>> GetListAsync(GetListPagedAndSortedDto input)
     {
-      if (input.Sorting.IsNullOrWhiteSpace())
-        input.Sorting = nameof(TransferCenter.UnitName);
-
       var totalCount = input.Filter == null
         ? await _transferCenterRepository.CountAsync()
         : await _transferCenterRepository.CountAsync(tc => tc.UnitName.Contains(input.Filter));
 
+      if (totalCount == 0)
+        throw new NotFoundException(typeof(TransferCenter), input.Filter ?? string.Empty);
+
       if (input.SkipCount >= totalCount)
-        throw new BusinessException(TCDomainErrorCodes.RequestLimitsError);
+        throw new BusinessException(AtcDomainErrorCodes.RequestLimitsError);
+
+      if (input.Sorting.IsNullOrWhiteSpace())
+        input.Sorting = nameof(TransferCenter.UnitName);
 
       var transferCenterList = await _transferCenterRepository.GetListAsync(input.SkipCount, input.MaxResultCount, input.Sorting, input.Filter);
-
 
       var transferCenterDtoList = _objectMapper.Map<List<TransferCenter>, List<TransferCenterDto>>(transferCenterList);
 

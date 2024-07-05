@@ -159,7 +159,7 @@ namespace agency_transfercenter
           UnitPhone = "04120351101",
           ManagerMail = "arif@gmail.com",
           UnitMail = "ankarasincan@gmail.com",
-          TransferCenterId = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "ankara@gmail.com")).Id,
+          TransferCenterId = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "ankara@gmail.com")).Id,
 
           Address = new Address()
           {
@@ -181,7 +181,7 @@ namespace agency_transfercenter
           UnitPhone = "04120352201",
           ManagerMail = "hakan@gmail.com",
           UnitMail = "istanbulkurtkoy@gmail.com",
-          TransferCenterId = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "istanbul@gmail.com")).Id,
+          TransferCenterId = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "istanbul@gmail.com")).Id,
 
           Address = new Address()
           {
@@ -203,7 +203,7 @@ namespace agency_transfercenter
           UnitPhone = "04120353301",
           ManagerMail = "murat@gmail.com",
           UnitMail = "adanapozanti@gmail.com",
-          TransferCenterId = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "adana@gmail.com")).Id,
+          TransferCenterId = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "adana@gmail.com")).Id,
 
           Address = new Address()
           {
@@ -225,7 +225,7 @@ namespace agency_transfercenter
           UnitPhone = "04120353302",
           ManagerMail = "bekir@gmail.com",
           UnitMail = "adanaaladag@gmail.com",
-          TransferCenterId = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "adana@gmail.com")).Id,
+          TransferCenterId = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "adana@gmail.com")).Id,
 
           Address = new Address()
           {
@@ -247,7 +247,7 @@ namespace agency_transfercenter
           UnitPhone = "04120354401",
           ManagerMail = "mehmet@gmail.com",
           UnitMail = "diyarbakirbaglar@gmail.com",
-          TransferCenterId = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id,
+          TransferCenterId = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id,
 
           Address = new Address()
           {
@@ -269,7 +269,7 @@ namespace agency_transfercenter
           UnitPhone = "04120354402",
           ManagerMail = "halil@gmail.com",
           UnitMail = "diyarbakirsurici@gmail.com",
-          TransferCenterId = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id,
+          TransferCenterId = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id,
 
           Address = new Address()
           {
@@ -291,7 +291,7 @@ namespace agency_transfercenter
           UnitPhone = "04120354403",
           ManagerMail = "adem@gmail.com",
           UnitMail = "diyarbakirhani@gmail.com",
-          TransferCenterId = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id,
+          TransferCenterId = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id,
 
           Address = new Address()
           {
