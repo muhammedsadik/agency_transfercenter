@@ -1,5 +1,6 @@
 ﻿using agency_transfercenter.Entities.Addresses;
 using agency_transfercenter.Entities.Agencies;
+using agency_transfercenter.Entities.Exceptions;
 using agency_transfercenter.Entities.Lines;
 using agency_transfercenter.Entities.Stations;
 using agency_transfercenter.Entities.TransferCenters;
@@ -17,7 +18,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace agency_transfercenter
 {
-    public class agency_transfercenterDataSeederContributor : IDataSeedContributor, ITransientDependency
+  public class agency_transfercenterDataSeederContributor : IDataSeedContributor, ITransientDependency
   {
     private readonly IRepository<TransferCenter, int> _transferCenterRepository;
     private readonly IRepository<Agency, int> _agencyRepository;
@@ -353,7 +354,7 @@ namespace agency_transfercenter
     private async Task CheckForAddingLine(string lineName)
     {
       if (await _lineRepository.AnyAsync(x => x.Name == lineName))
-        throw new UserFriendlyException("BURADA SABİT MESAJ KULLANILACAK");
+        throw new AlreadyExistException(typeof(Line), lineName);
     }
 
     #endregion
@@ -364,22 +365,22 @@ namespace agency_transfercenter
       if (await _stationRepository.GetCountAsync() > 0)
         return;
 
-      var LineId1 = (await _lineRepository.FirstOrDefaultAsync(x => x.Name == "line 1")).Id;
-      var UnitId1 = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id;
-      var UnitId2 = (await _agencyRepository.FirstOrDefaultAsync(x => x.UnitMail == "diyarbakirbaglar@gmail.com")).Id;
-      var UnitId3 = (await _agencyRepository.FirstOrDefaultAsync(x => x.UnitMail == "diyarbakirsurici@gmail.com")).Id;
-      var UnitId4 = (await _agencyRepository.FirstOrDefaultAsync(x => x.UnitMail == "diyarbakirhani@gmail.com")).Id;
+      var LineId1 = (await _lineRepository.GetAsync(x => x.Name == "line 1")).Id;
+      var UnitId1 = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id;
+      var UnitId2 = (await _agencyRepository.GetAsync(x => x.UnitMail == "diyarbakirbaglar@gmail.com")).Id;
+      var UnitId3 = (await _agencyRepository.GetAsync(x => x.UnitMail == "diyarbakirsurici@gmail.com")).Id;
+      var UnitId4 = (await _agencyRepository.GetAsync(x => x.UnitMail == "diyarbakirhani@gmail.com")).Id;
 
-      var LineId2 = (await _lineRepository.FirstOrDefaultAsync(x => x.Name == "line 2")).Id;
-      var UnitId5 = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "adana@gmail.com")).Id;
-      var UnitId6 = (await _agencyRepository.FirstOrDefaultAsync(x => x.UnitMail == "adanapozanti@gmail.com")).Id;
-      var UnitId7 = (await _agencyRepository.FirstOrDefaultAsync(x => x.UnitMail == "adanaaladag@gmail.com")).Id;
+      var LineId2 = (await _lineRepository.GetAsync(x => x.Name == "line 2")).Id;
+      var UnitId5 = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "adana@gmail.com")).Id;
+      var UnitId6 = (await _agencyRepository.GetAsync(x => x.UnitMail == "adanapozanti@gmail.com")).Id;
+      var UnitId7 = (await _agencyRepository.GetAsync(x => x.UnitMail == "adanaaladag@gmail.com")).Id;
 
-      var LineId3 = (await _lineRepository.FirstOrDefaultAsync(x => x.Name == "line 3")).Id;
-      var UnitId8 = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "istanbul@gmail.com")).Id;
-      var UnitId9 = (await _transferCenterRepository.FirstOrDefaultAsync(x => x.UnitMail == "ankara@gmail.com")).Id;
+      var LineId3 = (await _lineRepository.GetAsync(x => x.Name == "line 3")).Id;
+      var UnitId8 = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "istanbul@gmail.com")).Id;
+      var UnitId9 = (await _transferCenterRepository.GetAsync(x => x.UnitMail == "ankara@gmail.com")).Id;
 
-   
+
       await CheckForAddingStation(LineId1);
       await _stationRepository.InsertAsync(
         new Station(LineId1, UnitId1, await StationNumberGenerator(LineId1)),
@@ -450,9 +451,7 @@ namespace agency_transfercenter
     private async Task<int> StationNumberGenerator(int lineId)
     {
       if (await _stationRepository.CountAsync(x => x.LineId == lineId) <= 0)
-      {
         return 1;
-      }
 
       var stations = await _stationRepository.GetQueryableAsync();
 
@@ -460,7 +459,7 @@ namespace agency_transfercenter
           .Where(x => x.LineId == lineId)
           .Max(x => x.StationNumber);
 
-      if (maxStationNumber == 10)
+      if (maxStationNumber >= LineConst.LimitOfStation)
         throw new UserFriendlyException("BURADA SABİT MESAJ KULLANILACAK");
 
       return maxStationNumber + 1;

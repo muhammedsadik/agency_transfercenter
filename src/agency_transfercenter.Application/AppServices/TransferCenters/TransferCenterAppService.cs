@@ -1,4 +1,5 @@
 ﻿using agency_transfercenter.Entities.TransferCenters;
+using agency_transfercenter.EntityDtos.AgencyDtos;
 using agency_transfercenter.EntityDtos.PagedAndSortedDtos;
 using agency_transfercenter.EntityDtos.TransferCenterDtos;
 using agency_transfercenter.Permissions;
@@ -55,6 +56,13 @@ namespace agency_transfercenter.AppServices.TransferCenters
     public async Task DeleteHardAsync(int id)
     {
       await _transferCenterManager.DeleteHardAsync(id);
+    }
+
+    public async Task<PagedResultDto<AgencyDto>> GetListAgenciesByTransferCenterIdAsync(int id)
+    {
+      var transferCenters = await _transferCenterManager.GetListAgenciesByTransferCenterIdAsync(id);
+
+      return transferCenters;
     }
   }
 }

@@ -62,13 +62,11 @@ public class agency_transfercenterDbContext :
   public agency_transfercenterDbContext(DbContextOptions<agency_transfercenterDbContext> options)
       : base(options)
   {
-
   }
 
   protected override void OnModelCreating(ModelBuilder builder)
   {
     base.OnModelCreating(builder);
-
 
     builder.ConfigurePermissionManagement();
     builder.ConfigureSettingManagement();
@@ -79,7 +77,6 @@ public class agency_transfercenterDbContext :
     builder.ConfigureFeatureManagement();
     builder.ConfigureTenantManagement();
 
-
     builder.Entity<Line>(b =>
     {
       b.ToTable(agency_transfercenterConsts.DbTablePrefix + "Lines", agency_transfercenterConsts.DbSchema);
@@ -89,7 +86,7 @@ public class agency_transfercenterDbContext :
       b.HasIndex(x => x.Name).IsUnique();
       b.Property(x => x.LineType).IsRequired();
 
-      b.HasMany(x => x.Stations).WithOne().HasForeignKey(x => x.UnitId).IsRequired();
+      b.HasMany(x => x.Stations).WithOne().HasForeignKey(x => x.LineId).IsRequired();
 
       //b.HasMany(x => x.Station).WithMany(x => x.Line);  //many-to-many
     });

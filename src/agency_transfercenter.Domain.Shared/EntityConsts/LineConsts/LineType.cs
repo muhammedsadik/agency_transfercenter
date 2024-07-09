@@ -4,9 +4,9 @@ using System.Text;
 
 namespace agency_transfercenter.EntityConsts.LineConsts
 {
-    public enum LineType
-    {
-        MainLine,
-        SubLine
-    }
+  public enum LineType
+  {
+    MainLine,
+    SubLine
+  }
 }

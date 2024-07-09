@@ -30,9 +30,9 @@ namespace agency_transfercenter.Entities.Agencies
 
     public async Task<AgencyDto> CreateAsync(CreateAgencyDto createAgencyDto)
     {
-      var IsExistAgency = await _agencyRepository.AnyAsync(x => x.UnitName == createAgencyDto.UnitName);
+      var isExistAgency = await _agencyRepository.AnyAsync(x => x.UnitName == createAgencyDto.UnitName);
 
-      if (IsExistAgency)
+      if (isExistAgency)
         throw new AlreadyExistException(typeof(Agency), createAgencyDto.UnitName);
 
       var IsExistTransferCenter = await _transferCenterRepository.AnyAsync(x=> x.Id == createAgencyDto.TransferCenterId);
@@ -51,9 +51,9 @@ namespace agency_transfercenter.Entities.Agencies
 
     public async Task<AgencyDto> UpdateAsync(int id, UpdateAgencyDto updateAgency)
     {
-      var IsExistAgency = await _agencyRepository.AnyAsync(x => x.UnitName == updateAgency.UnitName && x.Id != id);
+      var isExistAgency = await _agencyRepository.AnyAsync(x => x.UnitName == updateAgency.UnitName && x.Id != id);
 
-      if (IsExistAgency)
+      if (isExistAgency)
         throw new AlreadyExistException(typeof(Agency), updateAgency.UnitName);
 
       var IsExistTransferCenter = await _transferCenterRepository.AnyAsync(x => x.Id == updateAgency.TransferCenterId);

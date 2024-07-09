@@ -18,7 +18,7 @@ namespace agency_transfercenter.Entities.Lines
     public string Name { get; set; }
     public bool IsActive { get; set; }
     public LineType LineType { get; set; }
-    public ICollection<Station> Stations { get; private set; }
+    public ICollection<Station> Stations { get; set; }
 
 
     internal Line()

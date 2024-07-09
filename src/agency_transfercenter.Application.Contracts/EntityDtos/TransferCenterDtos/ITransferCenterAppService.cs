@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using agency_transfercenter.EntityDtos.AgencyDtos;
 using agency_transfercenter.EntityDtos.PagedAndSortedDtos;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -12,5 +13,8 @@ namespace agency_transfercenter.EntityDtos.TransferCenterDtos
   public interface ITransferCenterAppService : ICrudAppService<TransferCenterDto, int, GetListPagedAndSortedDto, CreateTransferCenterDto, UpdateTransferCenterDto>
   {
     Task DeleteHardAsync(int id);
+
+    Task<PagedResultDto<AgencyDto>> GetListAgenciesByTransferCenterIdAsync(int id);
+
   }
 }
