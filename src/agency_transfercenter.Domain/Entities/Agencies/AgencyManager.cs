@@ -101,7 +101,5 @@ namespace agency_transfercenter.Entities.Agencies
       await _agencyRepository.HardDeleteAsync(transferCenter);
     }
 
-
-
   }
 }

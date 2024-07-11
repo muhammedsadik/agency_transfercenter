@@ -1,6 +1,7 @@
 ﻿using agency_transfercenter.Entities.Addresses;
 using agency_transfercenter.Entities.Agencies;
 using agency_transfercenter.Entities.Lines;
+using agency_transfercenter.Entities.Stations;
 using agency_transfercenter.Entities.TransferCenters;
 using agency_transfercenter.Entities.Units;
 using agency_transfercenter.EntityDtos.AddressDtos;
@@ -34,6 +35,10 @@ public class agency_transfercenterApplicationAutoMapperProfile : Profile
     CreateMap<Line, LineDto>().ReverseMap();
     CreateMap<UpdateLineDto, Line>().ReverseMap();
     CreateMap<CreateLineDto, Line>().ReverseMap();
+
+    CreateMap<Line, LineWithStationsDto>().ReverseMap();
+    CreateMap<Station, LineWithStationsDto>().ReverseMap();
+    CreateMap<Station, StationDto>().ReverseMap();
     #endregion
 
 

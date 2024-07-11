@@ -48,7 +48,7 @@ namespace agency_transfercenter.Entities.Lines
 
       var createdLine = _objectMapper.Map<CreateLineDto, Line>(createLineDto);
 
-      var line = await _lineRepository.InsertAsync(createdLine,autoSave:true);
+      var line = await _lineRepository.InsertAsync(createdLine, autoSave: true);
 
       var unitIdsLength = createLineDto.UnitId?.Length ?? 0;
       if (unitIdsLength != 0)
@@ -71,6 +71,10 @@ namespace agency_transfercenter.Entities.Lines
       _objectMapper.Map(updateLine, existingLine);
 
       var line = await _lineRepository.UpdateAsync(existingLine);
+
+      var unitIdsLength = updateLine.UnitId?.Length ?? 0;
+      if (unitIdsLength != 0)
+        await ReCreateStationAsync(line, updateLine.UnitId);
 
       var lineDto = _objectMapper.Map<Line, LineDto>(line);
 
@@ -99,6 +103,24 @@ namespace agency_transfercenter.Entities.Lines
       return new PagedResultDto<LineDto>(totalCount, lineDtoList);
     }
 
+    public async Task<LineWithStationsDto> GetLineWithStationsAsync(int lineId)
+    {
+      var line = await _lineRepository.FindAsync(lineId);
+
+      if (line == null)
+        throw new NotFoundException(typeof(Line), lineId.ToString());
+
+      var stations = await _stationRepository.GetListAsync(s => s.LineId == lineId);
+      if (stations == null)
+        throw new NotFoundException(typeof(Station), lineId.ToString());
+
+      var lineWithStationsDto = _objectMapper.Map<Line, LineWithStationsDto>(line);
+
+      _objectMapper.Map(stations, lineWithStationsDto.Stations);
+
+      return lineWithStationsDto;
+    }
+
     #endregion
 
 
@@ -106,63 +128,99 @@ namespace agency_transfercenter.Entities.Lines
 
     public async Task CreateStationAsync(Line line, int[] unitId)
     {
+      CheckDuplicateInputs(unitId);
+
+      await CheckCountStation(line.Id, unitId);
+
+      if (line.LineType == LineType.MainLine)
+        await CreateMainLineAsync(line.Id, unitId);
+
+
+      if (line.LineType == LineType.SubLine)
+        await CreateSubLineAsync(line.Id, unitId);
+    }
+
+    public async Task ReCreateStationAsync(Line line, int[] unitId)
+    {
+      var isExistStation = await _stationRepository.GetListAsync(s => s.LineId == line.Id);
+      if (isExistStation.Count() != 0)
+        await _stationRepository.DeleteManyAsync(isExistStation, autoSave: true);
+      
+      await CreateStationAsync(line, unitId);
+    }
+
+    internal async Task CreateMainLineAsync(int lineId, int[] unitId)
+    {
+      var stationNumber = 1;
+      foreach (var unit in unitId)
+      {
+        if (!await _transferCenterRepository.AnyAsync(tc => tc.Id == unit))
+          throw new NotFoundException(typeof(TransferCenter), unit.ToString());
+
+        await _stationRepository.InsertAsync(
+              new Station(lineId, unit, stationNumber));
+
+        stationNumber++;
+      }
+    }
+
+    internal async Task CreateSubLineAsync(int lineId, int[] unitId)
+    {
+      unitId = await CheckStationInputsValid(lineId, unitId);
+
+      var stationNumber = 1;
+      foreach (var unit in unitId)
+      {
+        await _stationRepository.InsertAsync(
+               new Station(lineId, unit, stationNumber));
+
+        stationNumber++;
+      }
+    }
+
+    internal async Task<int[]> CheckStationInputsValid(int lineId, int[] unitId)
+    {
+      var queryableTransferCenter = await _transferCenterRepository.GetQueryableAsync();
+
+      var transferCenterIds = await queryableTransferCenter
+         .Where(tc => unitId.Contains(tc.Id))
+         .Select(tc => tc.Id).ToListAsync();
+
+      if (transferCenterIds.Count() == 0 || transferCenterIds.Count() > 1)
+        throw new BusinessException(AtcDomainErrorCodes.MustHaveOneTransferCenter);
+
+      var transferCenterId = transferCenterIds.First();
+
+      var transferCenterWithAgencyIds = new int[] { transferCenterId }
+          .Concat((await _agencyRepository.GetListAsync(l => l.TransferCenterId == transferCenterId))
+          .Select(l => l.Id))
+          .ToArray();
+
+      unitId = new int[] { transferCenterId }
+          .Concat(unitId.Where(u => u != transferCenterId))
+          .ToArray();
+
+      var allInTransferCenterAgencies = unitId.All(u => transferCenterWithAgencyIds.Contains(u));
+
+      if (!allInTransferCenterAgencies)
+        throw new BusinessException(AtcDomainErrorCodes.AgenciesMustBeAffiliatedToTheTransferCenter);
+
+      return unitId;
+    }
+
+    internal void CheckDuplicateInputs(int[] unitId)
+    {
       var duplicates = unitId.GroupBy(x => x)
         .Where(u => u.Count() > 1).Select(u => u.Key).ToList();
 
       if (duplicates.Count > 0)
       {
         var duplicateUnits = string.Join(", ", duplicates);
-        throw new UserFriendlyException($"The duplicate number {duplicateUnits}");
-      }
-
-      await CheckCountStation(line.Id, unitId);
-
-      if (line.LineType == LineType.MainLine)
-      {
-        foreach (var item in unitId)
-        {
-          if (!await _transferCenterRepository.AnyAsync(tc => tc.Id == item))
-            throw new NotFoundException(typeof(TransferCenter), item.ToString());
-
-          await _stationRepository.InsertAsync(
-                new Station(line.Id, item, await StationNumberGenerator(line.Id)), autoSave: true);
-        }
-      }
-
-
-      if (line.LineType == LineType.SubLine)
-      {
-        var queryableTransferCenter = await _transferCenterRepository.GetQueryableAsync();
-
-        var transferCenterIds = await queryableTransferCenter
-           .Where(tc => unitId.Contains(tc.Id))
-           .Select(tc => tc.Id).ToListAsync();
-
-        if (transferCenterIds.Count() == 0 || transferCenterIds.Count() > 1)
-          throw new BusinessException();//en az - en çok bir transfer center. Hata mesajını özelleştir
-
-        var transferCenterId = transferCenterIds.First();
-
-        unitId = new int[] { transferCenterId }.Concat(unitId.Where(x => x != transferCenterId)).ToArray();
-
-        foreach (var item in unitId)
-        {
-          if (item != transferCenterId && !await _agencyRepository.AnyAsync(tc => tc.Id == item))
-            throw new NotFoundException(typeof(Agency), item.ToString());
-
-
-          await _stationRepository.InsertAsync(
-                 new Station(line.Id, item, await StationNumberGenerator(line.Id)), autoSave: true);
-        }
-      }
+        throw new BusinessException(AtcDomainErrorCodes.RepeatedDataError).WithData("repeat", duplicateUnits);
+      }      
     }
 
-    public async Task UpdateStationAsync()
-    {
-
-    }
-
-    private async Task<int> StationNumberGenerator(int lineId)
+    internal async Task<int> StationNumberGenerator(int lineId)
     {
       if (await _stationRepository.CountAsync(x => x.LineId == lineId) <= 0)
         return 1;
@@ -174,18 +232,21 @@ namespace agency_transfercenter.Entities.Lines
           .Max(x => x.StationNumber);
 
       if (maxStationNumber >= LineConst.LimitOfStation)
-        throw new UserFriendlyException("Limit hatasıyla ilgili error");//Create yaparken ihtiyaç duymadım. update yaparken ihtiyaç yoksa kaldır.
+        throw new BusinessException(AtcDomainErrorCodes.LimitOfStationError)
+          .WithData("0",LineConst.LimitOfStation).WithData("1", maxStationNumber);
 
-      return maxStationNumber + 1;
+      return maxStationNumber++;
     }
 
     internal async Task CheckCountStation(int lineId, int[]? unitId)
     {
-      var lineCount = await _stationRepository.CountAsync(x => x.LineId == lineId);
-      var totalCount = lineCount + unitId?.Length ?? 0;
+      var lineCount = await _stationRepository.CountAsync(s => s.LineId == lineId);
 
-      if (totalCount > LineConst.LimitOfStation)
-        throw new BusinessException("Limit hatasıyla ilgili error (gerek duyulursa => error sınıfı) kullanılacak KULLANILACAK");
+      lineCount +=   unitId?.Length ?? 0;
+
+      if (lineCount > LineConst.LimitOfStation)
+      throw new BusinessException(AtcDomainErrorCodes.LimitOfStationError)
+          .WithData("0", LineConst.LimitOfStation).WithData("1", lineCount);
     }
 
     #endregion

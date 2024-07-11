@@ -17,6 +17,5 @@ namespace agency_transfercenter.Entities.TransferCenters
     {
     }
 
-
   }
 }

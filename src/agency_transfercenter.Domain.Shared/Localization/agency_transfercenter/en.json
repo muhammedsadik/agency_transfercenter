@@ -17,16 +17,27 @@
     "Permission:Agencies.Edit": "Editing the agency",
     "Permission:Agencies.Delete": "Deleting the agency",
 
+    "Permission:Lines": "Line Management",
+    "Permission:Lines.Create": "Creating new line",
+    "Permission:Lines.Edit": "Editing the line",
+    "Permission:Lines.Delete": "Deleting the line",
+
 
     "TransferCenter": "Transfer Center",
 
 
     "agency_transfercenter:500": "{0} = {1} Not Found.",
     "agency_transfercenter:501": "There is already {0} with the same name: {1}.",
-    "agency_transfercenter:502": "Maximum request limit exceeded",
+    "agency_transfercenter:502": "Maximum request limit exceeded.",
+    "agency_transfercenter:503": "Only one Transfer Center must be selected.",
+    "agency_transfercenter:504": "Agencies Must Be affiliated to the Transfer Center.",
+    "agency_transfercenter:505": "The datas repeated = {repeat}.",
+    "agency_transfercenter:506": "Line must have maximum",
 
 
-    "agency_transfercenter:v401": "Please enter a valid phone format. Enter at least 11 digits which starting with 0"
-
+    "agency_transfercenter:v401": "Please enter a valid phone format. Enter at least 11 digits which starting with 0.",
+    "agency_transfercenter:v402": "Not in enum type. Enum type must contain = { 0 , 1 }.",
+    "agency_transfercenter:v403": "Station limit error. Maximum {0} request limit exceeded. Number of requests sent: {1}"
+      
   }
 }

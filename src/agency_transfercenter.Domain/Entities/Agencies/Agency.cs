@@ -20,6 +20,5 @@ namespace agency_transfercenter.Entities.Agencies
     {
     }
 
-
   }
 }

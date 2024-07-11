@@ -13,7 +13,7 @@ namespace agency_transfercenter.Validation.UnitValidation
   {
     public CreateUnitDtoValidator(IStringLocalizer<agency_transfercenterResource> localizer)
     {
-      RuleFor(x => x.UnitName).NotEmpty().MinimumLength(4);
+      RuleFor(x => x.UnitName).NotEmpty().MinimumLength(3);
 
       RuleFor(x => x.UnitPhone).Matches(@"^0\d{10}$").WithMessage(localizer[AtcDomainErrorCodes.NotInPhoneFormat]);
 

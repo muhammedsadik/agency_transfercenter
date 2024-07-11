@@ -16,7 +16,6 @@ namespace agency_transfercenter.Entities.Exceptions
     public Type EntityType { get; }
     public string EntityCode { get; }
 
-
     public AlreadyExistException(Type entityType, string entityCode) : base(AtcDomainErrorCodes.AlreadyExists)
     {
       EntityType = entityType;
@@ -40,7 +39,7 @@ namespace agency_transfercenter.Entities.Exceptions
   {
     public AlreadyExistException(string unit, string name) : base(TCDomainErrorCodes.AlreadyExists)
     {
-      WithData("unit", name).WithData("name", name);
+      WithData("unit", name);
     }
   }     
 */

@@ -15,7 +15,6 @@ namespace agency_transfercenter.Validation.TransferCenterValidation
     public UpdateTransferCenterDtoValidator(IStringLocalizer<agency_transfercenterResource> localizer)
     {
       Include(new UpdateUnitDtoValidator(localizer));
-
     }
   }
 }

@@ -9,5 +9,6 @@ namespace agency_transfercenter.EntityDtos.LineDtos
 {
   public interface ILineAppService : ICrudAppService<LineDto, int, GetListPagedAndSortedDto, CreateLineDto, UpdateLineDto>
   {
+    public Task<LineWithStationsDto> GetLineWithStationsAsync(int lineId);
   }
 }

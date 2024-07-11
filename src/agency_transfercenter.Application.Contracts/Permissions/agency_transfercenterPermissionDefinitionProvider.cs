@@ -21,6 +21,11 @@ public class agency_transfercenterPermissionDefinitionProvider : PermissionDefin
     AgencyPermission.AddChild(agency_transfercenterPermissions.Agencies.Create, L("Permission:Agencies.Create"));
     AgencyPermission.AddChild(agency_transfercenterPermissions.Agencies.Edit, L("Permission:Agencies.Edit"));
     AgencyPermission.AddChild(agency_transfercenterPermissions.Agencies.Delete, L("Permission:Agencies.Delete"));
+
+    var LinePermission = TransferCenterAndAgency.AddPermission(agency_transfercenterPermissions.Lines.Default, L("Permission:Lines"));
+    LinePermission.AddChild(agency_transfercenterPermissions.Lines.Create, L("Permission:Lines.Create"));
+    LinePermission.AddChild(agency_transfercenterPermissions.Lines.Edit, L("Permission:Lines.Edit"));
+    LinePermission.AddChild(agency_transfercenterPermissions.Lines.Delete, L("Permission:Lines.Delete"));
   }
 
   private static LocalizableString L(string name)

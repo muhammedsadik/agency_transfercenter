@@ -18,9 +18,10 @@ namespace agency_transfercenter.Entities.Stations
     public Line Line { get; set; }
 
 
-    internal Station() { }
-
-
+    internal Station() 
+    {
+    }
+      
     public Station(int lineId, int UnitId)
     {
       LineId = UnitId;
@@ -33,7 +34,7 @@ namespace agency_transfercenter.Entities.Stations
       UnitId = unitId;
       StationNumber = stationNumber; //bunu burada yaparken update için  kullana bilirsin ve bu key bilgisini de sorgu için kullana bilirsin
     }
-
+   
     public override object[] GetKeys()
     {
       return new object[] { LineId, UnitId };

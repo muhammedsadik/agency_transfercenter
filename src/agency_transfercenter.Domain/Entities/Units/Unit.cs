@@ -13,7 +13,6 @@ namespace agency_transfercenter.Entities.Units
 {
   public class Unit : FullAuditedAggregateRoot<int>
   {
-
     public string UnitName { get; set; }
     public string UnitPhone { get; set; }
     public string UnitMail { get; set; }
@@ -30,7 +29,6 @@ namespace agency_transfercenter.Entities.Units
     internal Unit()
     {
     }
-
 
   }
 }

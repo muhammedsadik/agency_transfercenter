@@ -103,8 +103,6 @@ namespace agency_transfercenter.Entities.TransferCenters
 
       var agencyDto = _objectMapper.Map<List<Agency>, List<AgencyDto>>(agencies);
 
-      var pagedAgencyDto = new PagedResultDto<AgencyDto>(12, agencyDto);
-
       var totalCount = await _agencyRepository.CountAsync(a=> a.TransferCenterId == id);
 
       return new PagedResultDto<AgencyDto>(totalCount, agencyDto);
