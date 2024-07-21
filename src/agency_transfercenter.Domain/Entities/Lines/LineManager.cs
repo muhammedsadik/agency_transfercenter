@@ -18,6 +18,11 @@ using Volo.Abp.Domain.Services;
 using Volo.Abp.ObjectMapping;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
+using Volo.Abp.Users;
+using agency_transfercenter.EntityConsts.RoleConsts;
+using Volo.Abp.Identity;
+using Volo.Abp.Data;
+using agency_transfercenter.EntityConsts.UserConts;
 
 namespace agency_transfercenter.Entities.Lines
 {
@@ -28,14 +33,29 @@ namespace agency_transfercenter.Entities.Lines
     private readonly IAgencyRepository _agencyRepository;
     private readonly ILineRepository _lineRepository;
     private readonly IObjectMapper _objectMapper;
+    private readonly ICurrentUser _currentUser;
+    private readonly IdentityUserManager _identityUserManager;
+    private readonly IdentityRoleManager _identityRoleManager;
 
-    public LineManager(IObjectMapper objectMapper, ILineRepository lineRepository, IRepository<Station> stationRepository, ITransferCenterRepository transferCenterRepository, IAgencyRepository agencyRepository)
+    public LineManager(
+      IObjectMapper objectMapper,
+      ILineRepository lineRepository,
+      IRepository<Station> stationRepository,
+      ITransferCenterRepository transferCenterRepository,
+      IAgencyRepository agencyRepository,
+      ICurrentUser currentUser,
+      IdentityUserManager identityUserManager,
+      IdentityRoleManager identityRoleManager
+      )
     {
       _transferCenterRepository = transferCenterRepository;
       _stationRepository = stationRepository;
       _agencyRepository = agencyRepository;
       _lineRepository = lineRepository;
       _objectMapper = objectMapper;
+      _currentUser = currentUser;
+      _identityUserManager = identityUserManager;
+      _identityRoleManager = identityRoleManager;
     }
 
     #region Line
@@ -105,8 +125,9 @@ namespace agency_transfercenter.Entities.Lines
 
     public async Task<LineWithStationsDto> GetLineWithStationsAsync(int lineId)
     {
-      var line = await _lineRepository.FindAsync(lineId);
+      await CheckStationRequest(lineId);
 
+      var line = await _lineRepository.FindAsync(lineId);
       if (line == null)
         throw new NotFoundException(typeof(Line), lineId.ToString());
 
@@ -120,6 +141,21 @@ namespace agency_transfercenter.Entities.Lines
 
       return lineWithStationsDto;
     }
+
+
+    public async Task CheckStationRequest(int lineId)
+    {
+      if (!_currentUser.IsInRole(RoleConst.ViewAllLine))
+      {
+        var userId = _currentUser.Id.Value;
+        var user = await _identityUserManager.GetByIdAsync(userId);
+        var userUnitId = user.GetProperty<int>(UserConst.UserUnitId);
+
+        if (userUnitId != lineId)
+          throw new BusinessException(AtcDomainErrorCodes.NotAuthForRequest);
+      }
+    }
+
 
     #endregion
 
@@ -145,7 +181,7 @@ namespace agency_transfercenter.Entities.Lines
       var isExistStation = await _stationRepository.GetListAsync(s => s.LineId == line.Id);
       if (isExistStation.Count() != 0)
         await _stationRepository.DeleteManyAsync(isExistStation, autoSave: true);
-      
+
       await CreateStationAsync(line, unitId);
     }
 
@@ -217,7 +253,7 @@ namespace agency_transfercenter.Entities.Lines
       {
         var duplicateUnits = string.Join(", ", duplicates);
         throw new BusinessException(AtcDomainErrorCodes.RepeatedDataError).WithData("repeat", duplicateUnits);
-      }      
+      }
     }
 
     internal async Task<int> StationNumberGenerator(int lineId)
@@ -233,7 +269,7 @@ namespace agency_transfercenter.Entities.Lines
 
       if (maxStationNumber >= LineConst.LimitOfStation)
         throw new BusinessException(AtcDomainErrorCodes.LimitOfStationError)
-          .WithData("0",LineConst.LimitOfStation).WithData("1", maxStationNumber);
+          .WithData("0", LineConst.LimitOfStation).WithData("1", maxStationNumber);
 
       return maxStationNumber++;
     }
@@ -242,11 +278,11 @@ namespace agency_transfercenter.Entities.Lines
     {
       var lineCount = await _stationRepository.CountAsync(s => s.LineId == lineId);
 
-      lineCount +=   unitId?.Length ?? 0;
+      lineCount += unitId?.Length ?? 0;
 
       if (lineCount > LineConst.LimitOfStation)
-      throw new BusinessException(AtcDomainErrorCodes.LimitOfStationError)
-          .WithData("0", LineConst.LimitOfStation).WithData("1", lineCount);
+        throw new BusinessException(AtcDomainErrorCodes.LimitOfStationError)
+            .WithData("0", LineConst.LimitOfStation).WithData("1", lineCount);
     }
 
     #endregion

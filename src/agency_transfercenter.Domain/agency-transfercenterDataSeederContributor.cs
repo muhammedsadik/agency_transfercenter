@@ -6,6 +6,8 @@ using agency_transfercenter.Entities.Stations;
 using agency_transfercenter.Entities.TransferCenters;
 using agency_transfercenter.Entities.Units;
 using agency_transfercenter.EntityConsts.LineConsts;
+using agency_transfercenter.EntityConsts.RoleConsts;
+using agency_transfercenter.EntityConsts.UserConts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,8 @@ using Volo.Abp;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Guids;
+using Volo.Abp.Identity;
 
 namespace agency_transfercenter
 {
@@ -25,13 +29,23 @@ namespace agency_transfercenter
     private readonly IRepository<Station> _stationRepository;
     private readonly IRepository<Line, int> _lineRepository;
     private readonly IRepository<Unit, int> _unitRepository;
+    private readonly IRepository<IdentityUser, Guid> _userRepository;
+    private readonly IRepository<IdentityRole, Guid> _roleRepository;
+    private readonly IGuidGenerator _guidGenerator;
+    private readonly IdentityUserManager _identityUserManager;
+    private readonly IdentityRoleManager _identityRoleManager;
 
     public agency_transfercenterDataSeederContributor(
       IRepository<TransferCenter, int> transferCenterRepository,
       IRepository<Agency, int> agencyRepository,
       IRepository<Station> stationRepository,
       IRepository<Line, int> lineRepository,
-      IRepository<Unit, int> unitRepository
+      IRepository<Unit, int> unitRepository,
+      IRepository<IdentityUser, Guid> userRepository,
+      IRepository<IdentityRole, Guid> roleRepository,
+      IGuidGenerator guidGenerator,
+      IdentityUserManager identityUserManager,
+      IdentityRoleManager identityRoleManager
       )
     {
       _transferCenterRepository = transferCenterRepository;
@@ -39,6 +53,11 @@ namespace agency_transfercenter
       _lineRepository = lineRepository;
       _stationRepository = stationRepository;
       _unitRepository = unitRepository;
+      _userRepository = userRepository;
+      _roleRepository = roleRepository;
+      _guidGenerator = guidGenerator;
+      _identityUserManager = identityUserManager;
+      _identityRoleManager = identityRoleManager;
     }
 
     public async Task SeedAsync(DataSeedContext context)
@@ -47,6 +66,8 @@ namespace agency_transfercenter
       await SeedAgencyAsync();
       await SeedLineAsync();
       await SeedStationAsync();
+      await SeedUserAsync();
+      await SeedRoleAsync();
     }
 
     #region TransferCenter
@@ -472,6 +493,118 @@ namespace agency_transfercenter
     }
     #endregion
 
+    #region User
+
+    private async Task SeedUserAsync()
+    {
+      if (!await _userRepository.AnyAsync(x => x.UserName == "Ahmet"))
+      {
+        var userAhmet = new IdentityUser
+          (
+            _guidGenerator.Create(),
+            "Ahmet",
+            "ahmet@gmail.com"
+          );
+
+        await _identityUserManager.CreateAsync(userAhmet, "1q2w3E*");
+        userAhmet.SetProperty(UserConst.UserUnitId, (await _transferCenterRepository.GetAsync(x => x.UnitMail == "ankara@gmail.com")).Id);
+      }
+
+      if (!await _userRepository.AnyAsync(x => x.UserName == "Omer"))
+      {
+        var userOmer = new IdentityUser
+          (
+            _guidGenerator.Create(),
+            "Omer",
+            "omer@gmail.com"
+          );
+
+        await _identityUserManager.CreateAsync(userOmer, "1q2w3E*");
+        userOmer.SetProperty(UserConst.UserUnitId, (await _transferCenterRepository.GetAsync(x => x.UnitMail == "diyarbakir@gmail.com")).Id);
+      }
+
+      if (!await _userRepository.AnyAsync(x => x.UserName == "Murat"))
+      {
+        var userMurat = new IdentityUser
+          (
+            _guidGenerator.Create(),
+            "Murat",
+            "murat@gmail.com"
+          );
+
+        await _identityUserManager.CreateAsync(userMurat, "1q2w3E*");
+        userMurat.SetProperty(UserConst.UserUnitId, (await _agencyRepository.GetAsync(x => x.UnitMail == "adanapozanti@gmail.com")).Id);
+      }
+
+      if (!await _userRepository.AnyAsync(x => x.UserName == "Mehmet"))
+      {
+        var userMehmet = 
+          new IdentityUser
+          (
+            _guidGenerator.Create(),
+            "Mehmet",
+            "mehmet@gmail.com"
+          );
+
+        await _identityUserManager.CreateAsync(userMehmet, "1q2w3E*");
+        userMehmet.SetProperty(UserConst.UserUnitId, (await _agencyRepository.GetAsync(x => x.UnitMail == "diyarbakirbaglar@gmail.com")).Id);
+      }
+
+      if (!await _userRepository.AnyAsync(x => x.UserName == "Halil"))
+      {
+        var userHalil = new IdentityUser
+          (
+            _guidGenerator.Create(),
+            "Halil",
+            "halil@gmail.com"
+          );
+
+        await _identityUserManager.CreateAsync(userHalil, "1q2w3E*");
+        userHalil.SetProperty(UserConst.UserUnitId, (await _agencyRepository.GetAsync(x => x.UnitMail == "diyarbakirsurici@gmail.com")).Id);
+      }
+
+    }
+
+    #endregion
+
+    #region Role
+    private async Task SeedRoleAsync()
+    {
+      if (!await _identityRoleManager.RoleExistsAsync(RoleConst.Administrator))
+      {
+        await _identityRoleManager.CreateAsync(
+          new IdentityRole
+          (
+            _guidGenerator.Create(),
+            
+            RoleConst.Administrator
+          )
+        );
+      }
+
+      if (!await _identityRoleManager.RoleExistsAsync(RoleConst.AgencyManager))
+      {
+        await _identityRoleManager.CreateAsync(
+          new IdentityRole
+          (
+            _guidGenerator.Create(),
+            RoleConst.AgencyManager
+          )
+        );
+      }
+
+      if (!await _identityRoleManager.RoleExistsAsync(RoleConst.ViewAllLine))
+      {
+        await _identityRoleManager.CreateAsync(
+          new IdentityRole
+          (
+            _guidGenerator.Create(),
+            RoleConst.ViewAllLine
+          )
+        );
+      }
+    }
+    #endregion
 
   }
 }

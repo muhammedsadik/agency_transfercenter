@@ -32,18 +32,17 @@ public class agency_transfercenterDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
-  /* Add DbSet properties for your Aggregate Roots / Entities here. */
+  
 
-  #region Entities from the modules
-
-
-  //Identity
   public DbSet<TransferCenter> TransferCenters { get; set; }
   public DbSet<Agency> Agencies { get; set; }
   public DbSet<Line> Lines { get; set; }
   public DbSet<Unit> Units { get; set; }
   public DbSet<Station> Stations { get; set; }
 
+  #region Entities from the modules
+
+  //Identity
   public DbSet<IdentityUser> Users { get; set; }
   public DbSet<IdentityRole> Roles { get; set; }
   public DbSet<IdentityClaimType> ClaimTypes { get; set; }
@@ -55,7 +54,6 @@ public class agency_transfercenterDbContext :
   // Tenant Management
   public DbSet<Tenant> Tenants { get; set; }
   public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
-
 
   #endregion
 

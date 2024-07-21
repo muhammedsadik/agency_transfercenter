@@ -7,18 +7,18 @@
 
     "Permission:TransferCenterAndAgency": "Transfer Merkezi ve Acenta",
 
-    "Permission:Transfercenters": "Transfer Merkezi yönetimi",
+    "Permission:Transfercenters": "Transfer Merkezi",
     "Permission:Transfercenters.Create": "Transfer Merkezi oluşturma",
     "Permission:Transfercenters.Edit": "Transfer Merkezi düzenleme",
     "Permission:Transfercenters.Delete": "Transfer Merkezi silme",
 
-    "Permission:Agencies": "Acenta yönetimi",
+    "Permission:Agencies": "Acenta",
     "Permission:Agencies.Create": "Acenta oluşturma",
     "Permission:Agencies.Edit": "Acenta düzenleme",
     "Permission:Agencies.Delete": "Acenta silme",
 
 
-    "Permission:Lines": "Hat yönetimi",
+    "Permission:Lines": "Hat",
     "Permission:Lines.Create": "Hat oluşturma",
     "Permission:Lines.Edit": "Hat düzenleme",
     "Permission:Lines.Delete": "Hat silme",
@@ -26,6 +26,10 @@
 
     "TransferCenter": "Transfer Merkezi",
     "Agency": "Acenta",
+    "UnitId": "Birim",
+    "Administrator": "Yönetici",
+    "AgencyManager": "Acenta Yöneticisi",
+    "ViewAllLine": "Tüm Hatlar",
 
     "agency_transfercenter:500": "{0} = {1} Bulunamadı.",
     "agency_transfercenter:501": "{1} ile aynı isimli bir {0} önceden oluşturulmuş.",
@@ -33,6 +37,7 @@
     "agency_transfercenter:503": "Bir tane Transfer Merkezi Seçilmelidir.",
     "agency_transfercenter:504": "Acentalar Transfer Merkezine bağlı olmalı.",
     "agency_transfercenter:505": "Veriler tekararlandı = {repeat}.",
+    "agency_transfercenter:507": "Bu isteğe yetkiniz yoktur.",
 
 
     "agency_transfercenter:v401": "Lütfen geçerli bir telefon numarası formatı giriniz. 0 ile başlayan 11 haneli numara giriniz.",

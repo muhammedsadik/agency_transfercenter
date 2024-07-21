@@ -1,5 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using agency_transfercenter.EntityConsts.UserConts;
+using agency_transfercenter.Localization;
+using System.ComponentModel.DataAnnotations;
 using Volo.Abp.Identity;
+using Volo.Abp.Localization;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.Threading;
 
@@ -37,26 +40,27 @@ public static class agency_transfercenterModuleExtensionConfigurator
 
   private static void ConfigureExtraProperties()
   {
-    //USER EXTEND ETTİK
-    //ObjectExtensionManager.Instance.Modules()
-    //   .ConfigureIdentity(identity =>
-    //   {
-    //     identity.ConfigureUser(user =>
-    //     {                  //property type: string
-    //       user.AddOrUpdateProperty<string>("SocialSecurityNumber", //property name
-    //          property =>
-    //          {
-    //            //validation rules
-    //            property.Attributes.Add(new RequiredAttribute());
-    //            property.Attributes.Add(new StringLengthAttribute(64) { MinimumLength = 4 });
+    //https://docs.abp.io/en/abp/latest/Module-Entity-Extensions#quick-example
+    ObjectExtensionManager.Instance.Modules()
+     .ConfigureIdentity(identity =>
+     {
+       identity.ConfigureUser(user =>
+       {
+         user.AddOrUpdateProperty<int?>(
+           UserConst.UserUnitId,
+           property =>
+           {
+             property.UI.Lookup.Url = "/api/app/agency";
+             property.UI.Lookup.DisplayPropertyName = "unitName";
 
-    //            property.Configuration[IdentityModuleExtensionConsts.ConfigurationNames.AllowUserToEdit] = true;
-
-    //            //...other configurations for this property
-    //          });
-    //     });
-    //   });
-
+             property.DisplayName = LocalizableString.Create<agency_transfercenterResource>(
+               UserConst.UserUnitId
+             );   
+             
+           });
+       });
+     });
+ 
 
 
     /* You can configure extra properties for the

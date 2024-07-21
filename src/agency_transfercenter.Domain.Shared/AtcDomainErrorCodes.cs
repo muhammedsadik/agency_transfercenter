@@ -13,6 +13,7 @@ public static class AtcDomainErrorCodes
   public const string AgenciesMustBeAffiliatedToTheTransferCenter = "agency_transfercenter:504";
   public const string RepeatedDataError = "agency_transfercenter:505";
   public const string LimitOfStationError = "agency_transfercenter:506";
+  public const string NotAuthForRequest = "agency_transfercenter:507";
 
   
   #endregion

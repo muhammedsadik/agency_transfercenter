@@ -19,7 +19,6 @@ public static class agency_transfercenterPermissions
     public const string Create = Default + ".Create";
     public const string Edit = Default + ".Edit";
     public const string Delete = Default + ".Delete";
-
   }
 
   public static class Lines
