@@ -125,8 +125,6 @@ namespace agency_transfercenter.Entities.Lines
 
     public async Task<LineWithStationsDto> GetLineWithStationsAsync(int lineId)
     {
-      await CheckStationRequest(lineId);
-
       var line = await _lineRepository.FindAsync(lineId);
       if (line == null)
         throw new NotFoundException(typeof(Line), lineId.ToString());
@@ -135,6 +133,8 @@ namespace agency_transfercenter.Entities.Lines
       if (stations == null)
         throw new NotFoundException(typeof(Station), lineId.ToString());
 
+      await CheckStationPermitRequest(stations);
+      
       var lineWithStationsDto = _objectMapper.Map<Line, LineWithStationsDto>(line);
 
       _objectMapper.Map(stations, lineWithStationsDto.Stations);
@@ -143,7 +143,7 @@ namespace agency_transfercenter.Entities.Lines
     }
 
 
-    public async Task CheckStationRequest(int lineId)
+    public async Task CheckStationPermitRequest(List<Station> stations)
     {
       if (!_currentUser.IsInRole(RoleConst.ViewAllLine))
       {
@@ -151,7 +151,7 @@ namespace agency_transfercenter.Entities.Lines
         var user = await _identityUserManager.GetByIdAsync(userId);
         var userUnitId = user.GetProperty<int>(UserConst.UserUnitId);
 
-        if (userUnitId != lineId)
+        if (!stations.Any(x => x.UnitId == userUnitId))
           throw new BusinessException(AtcDomainErrorCodes.NotAuthForRequest);
       }
     }
