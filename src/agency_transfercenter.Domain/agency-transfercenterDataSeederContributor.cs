@@ -8,6 +8,7 @@ using agency_transfercenter.Entities.Units;
 using agency_transfercenter.EntityConsts.LineConsts;
 using agency_transfercenter.EntityConsts.RoleConsts;
 using agency_transfercenter.EntityConsts.UserConts;
+using agency_transfercenter.Permissions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
 using Volo.Abp.Identity;
+using Volo.Abp.PermissionManagement;
 
 namespace agency_transfercenter
 {
@@ -34,6 +36,7 @@ namespace agency_transfercenter
     private readonly IGuidGenerator _guidGenerator;
     private readonly IdentityUserManager _identityUserManager;
     private readonly IdentityRoleManager _identityRoleManager;
+    private readonly IPermissionManager _permissionManager;
 
     public agency_transfercenterDataSeederContributor(
       IRepository<TransferCenter, int> transferCenterRepository,
@@ -45,7 +48,8 @@ namespace agency_transfercenter
       IRepository<IdentityRole, Guid> roleRepository,
       IGuidGenerator guidGenerator,
       IdentityUserManager identityUserManager,
-      IdentityRoleManager identityRoleManager
+      IdentityRoleManager identityRoleManager,
+      IPermissionManager permissionManager
       )
     {
       _transferCenterRepository = transferCenterRepository;
@@ -58,6 +62,7 @@ namespace agency_transfercenter
       _guidGenerator = guidGenerator;
       _identityUserManager = identityUserManager;
       _identityRoleManager = identityRoleManager;
+      _permissionManager = permissionManager;
     }
 
     public async Task SeedAsync(DataSeedContext context)
@@ -501,21 +506,15 @@ namespace agency_transfercenter
         await _identityRoleManager.CreateAsync(
           new IdentityRole
           (
-            _guidGenerator.Create(),            
+            _guidGenerator.Create(),
             RoleConst.TransferCenterManager
           )
         );
-      }
-      
-      if (!await _identityRoleManager.RoleExistsAsync(RoleConst.Administrator))
-      {
-        await _identityRoleManager.CreateAsync(
-          new IdentityRole
-          (
-            _guidGenerator.Create(),            
-            RoleConst.Administrator
-          )
-        );
+
+        await _permissionManager.SetForRoleAsync(RoleConst.TransferCenterManager, agency_transfercenterPermissions.Transfercenters.Default, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.TransferCenterManager, agency_transfercenterPermissions.Transfercenters.Create, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.TransferCenterManager, agency_transfercenterPermissions.Transfercenters.Edit, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.TransferCenterManager, agency_transfercenterPermissions.Transfercenters.Delete, true);
       }
 
       if (!await _identityRoleManager.RoleExistsAsync(RoleConst.AgencyManager))
@@ -527,6 +526,53 @@ namespace agency_transfercenter
             RoleConst.AgencyManager
           )
         );
+
+        await _permissionManager.SetForRoleAsync(RoleConst.AgencyManager, agency_transfercenterPermissions.Agencies.Default, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.AgencyManager, agency_transfercenterPermissions.Agencies.Create, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.AgencyManager, agency_transfercenterPermissions.Agencies.Edit, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.AgencyManager, agency_transfercenterPermissions.Agencies.Delete, true);
+      }
+
+      if (!await _identityRoleManager.RoleExistsAsync(RoleConst.LineManager))
+      {
+        await _identityRoleManager.CreateAsync(
+          new IdentityRole
+          (
+            _guidGenerator.Create(),
+            RoleConst.LineManager
+          )
+        );
+
+        await _permissionManager.SetForRoleAsync(RoleConst.LineManager, agency_transfercenterPermissions.Lines.Default, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.LineManager, agency_transfercenterPermissions.Lines.Create, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.LineManager, agency_transfercenterPermissions.Lines.Edit, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.LineManager, agency_transfercenterPermissions.Lines.Delete, true);
+      }
+
+      if (!await _identityRoleManager.RoleExistsAsync(RoleConst.Administrator))
+      {
+        await _identityRoleManager.CreateAsync(
+          new IdentityRole
+          (
+            _guidGenerator.Create(),
+            RoleConst.Administrator
+          )
+        );
+
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Transfercenters.Default, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Transfercenters.Create, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Transfercenters.Edit, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Transfercenters.Delete, true);
+
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Agencies.Default, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Agencies.Create, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Agencies.Edit, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Agencies.Delete, true);
+
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Lines.Default, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Lines.Create, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Lines.Edit, true);
+        await _permissionManager.SetForRoleAsync(RoleConst.Administrator, agency_transfercenterPermissions.Lines.Delete, true);
       }
 
       if (!await _identityRoleManager.RoleExistsAsync(RoleConst.ViewAllLine))
@@ -538,6 +584,8 @@ namespace agency_transfercenter
             RoleConst.ViewAllLine
           )
         );
+
+        await _permissionManager.SetForRoleAsync(RoleConst.ViewAllLine, agency_transfercenterPermissions.Lines.Default, true);
       };
     }
     #endregion
@@ -557,7 +605,16 @@ namespace agency_transfercenter
 
         await _identityUserManager.CreateAsync(userAhmet, "1q2w3E*");
         userAhmet.SetProperty(UserConst.UserUnitId, (await _transferCenterRepository.GetAsync(x => x.UnitMail == "ankara@gmail.com")).Id);
-        await _identityUserManager.SetRolesAsync(userAhmet, new List<string> { RoleConst.TransferCenterManager, RoleConst.Administrator, RoleConst.ViewAllLine });
+        await _identityUserManager.SetRolesAsync(
+          userAhmet,
+          new List<string>          {
+            RoleConst.TransferCenterManager,
+            RoleConst.Administrator,
+            RoleConst.ViewAllLine,
+            RoleConst.LineManager,
+            RoleConst.AgencyManager
+          }
+        );
       }
 
       if (!await _userRepository.AnyAsync(x => x.UserName == "Omer"))
@@ -590,7 +647,7 @@ namespace agency_transfercenter
 
       if (!await _userRepository.AnyAsync(x => x.UserName == "Mehmet"))
       {
-        var userMehmet = 
+        var userMehmet =
           new IdentityUser
           (
             _guidGenerator.Create(),
