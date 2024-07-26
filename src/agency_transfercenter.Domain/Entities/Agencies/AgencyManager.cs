@@ -96,9 +96,9 @@ namespace agency_transfercenter.Entities.Agencies
 
     public async Task DeleteHardAsync(int id)
     {
-      var transferCenter = await _agencyRepository.GetAsync(x => x.Id == id);
+      var agency = await _agencyRepository.GetAsync(x => x.Id == id);
 
-      await _agencyRepository.HardDeleteAsync(transferCenter);
+      await _agencyRepository.HardDeleteAsync(agency);
     }
 
   }

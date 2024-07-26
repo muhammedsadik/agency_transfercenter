@@ -486,7 +486,8 @@ namespace agency_transfercenter
           .Max(x => x.StationNumber);
 
       if (maxStationNumber >= LineConst.LimitOfStation)
-        throw new UserFriendlyException("BURADA SABİT MESAJ KULLANILACAK");
+        throw new BusinessException(AtcDomainErrorCodes.StationLimitError)
+          .WithData("0", LineConst.LimitOfStation).WithData("1", maxStationNumber);
 
       return maxStationNumber + 1;
     }
@@ -494,7 +495,8 @@ namespace agency_transfercenter
     private async Task CheckForAddingStation(int lineId)
     {
       if (await _stationRepository.CountAsync(x => x.LineId == lineId) > LineConst.LimitOfStation)
-        throw new UserFriendlyException("BURADA SABİT MESAJ KULLANILACAK");
+        throw new UserFriendlyException(AtcDomainErrorCodes.StationLimitError);
+
     }
     #endregion
 
@@ -591,7 +593,6 @@ namespace agency_transfercenter
     #endregion
 
     #region User
-
     private async Task SeedUserAsync()
     {
       if (!await _userRepository.AnyAsync(x => x.UserName == "Ahmet"))

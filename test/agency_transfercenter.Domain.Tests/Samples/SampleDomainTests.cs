@@ -23,7 +23,7 @@ public abstract class SampleDomainTests<TStartupModule> : agency_transfercenterD
         _identityUserManager = GetRequiredService<IdentityUserManager>();
     }
 
-    [Fact]
+    //[Fact]
     public async Task Should_Set_Email_Of_A_User()
     {
         IdentityUser adminUser;

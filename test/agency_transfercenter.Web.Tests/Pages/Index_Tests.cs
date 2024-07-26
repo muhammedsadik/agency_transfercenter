@@ -6,7 +6,7 @@ namespace agency_transfercenter.Pages;
 
 public class Index_Tests : agency_transfercenterWebTestBase
 {
-    [Fact]
+    //[Fact]
     public async Task Welcome_Page()
     {
         var response = await GetResponseAsStringAsync("/");

@@ -29,6 +29,8 @@ public class agency_transfercenterApplicationAutoMapperProfile : Profile
     CreateMap<Agency, AgencyDto>().ReverseMap();
     CreateMap<UpdateAgencyDto, Agency>().ReverseMap();
     CreateMap<CreateAgencyDto, Agency>().ReverseMap();
+    CreateMap<UpdateAgencyDto, AgencyDto>().ReverseMap();
+    CreateMap<CreateAgencyDto, AgencyDto>().ReverseMap();
     #endregion
     
     #region Line
