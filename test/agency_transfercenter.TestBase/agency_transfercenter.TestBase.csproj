@@ -28,4 +28,8 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\agency_transfercenter.Domain\agency_transfercenter.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

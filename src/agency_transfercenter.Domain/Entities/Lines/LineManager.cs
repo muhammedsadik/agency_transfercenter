@@ -268,7 +268,7 @@ namespace agency_transfercenter.Entities.Lines
           .Max(x => x.StationNumber);
 
       if (maxStationNumber >= LineConst.LimitOfStation)
-        throw new BusinessException(AtcDomainErrorCodes.LimitOfStationError)
+        throw new BusinessException(AtcDomainErrorCodes.StationLimitError)
           .WithData("0", LineConst.LimitOfStation).WithData("1", maxStationNumber);
 
       return maxStationNumber++;
@@ -281,7 +281,7 @@ namespace agency_transfercenter.Entities.Lines
       lineCount += unitId?.Length ?? 0;
 
       if (lineCount > LineConst.LimitOfStation)
-        throw new BusinessException(AtcDomainErrorCodes.LimitOfStationError)
+        throw new BusinessException(AtcDomainErrorCodes.StationLimitError)
             .WithData("0", LineConst.LimitOfStation).WithData("1", lineCount);
     }
 

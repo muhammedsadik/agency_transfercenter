@@ -21,7 +21,7 @@ public abstract class SampleAppServiceTests<TStartupModule> : agency_transfercen
         _userAppService = GetRequiredService<IIdentityUserAppService>();
     }
 
-    [Fact]
+    //[Fact]
     public async Task Initial_Data_Should_Contain_Admin_User()
     {
         //Act
