@@ -23,6 +23,8 @@ public class agency_transfercenterApplicationAutoMapperProfile : Profile
     CreateMap<TransferCenter, TransferCenterDto>().ReverseMap();
     CreateMap<UpdateTransferCenterDto, TransferCenter>().ReverseMap();
     CreateMap<CreateTransferCenterDto, TransferCenter>().ReverseMap();
+    CreateMap<UpdateTransferCenterDto, TransferCenterDto>().ReverseMap();
+    CreateMap<CreateTransferCenterDto, TransferCenterDto>().ReverseMap();
     #endregion
     
     #region Agency
@@ -37,6 +39,7 @@ public class agency_transfercenterApplicationAutoMapperProfile : Profile
     CreateMap<Line, LineDto>().ReverseMap();
     CreateMap<UpdateLineDto, Line>().ReverseMap();
     CreateMap<CreateLineDto, Line>().ReverseMap();
+    CreateMap<CreateLineDto, UpdateLineDto>().ReverseMap();
 
     CreateMap<Line, LineWithStationsDto>().ReverseMap();
     CreateMap<Station, LineWithStationsDto>().ReverseMap();

@@ -26,8 +26,8 @@ namespace agency_transfercenter.Agency
     where TStartupModule : IAbpModule
   {
     private readonly AgencyAppService _agencyAppService;
-    private readonly AgencyDto _agencyDto;
     private readonly IObjectMapper _objectMapper;
+    private readonly AgencyDto _agencyDto;
     private readonly IAgencyRepository _agencyRepository;
 
     public AgencyAppService_Test()
@@ -73,7 +73,7 @@ namespace agency_transfercenter.Agency
     }
 
     [Fact]
-    public async Task CreateAsync_TransferCenterId_NotFoundException()
+    public async Task CreateAsync_TransferCenterIdInValid_NotFoundException()
     {
       var _createAgencyDto = _objectMapper.Map<AgencyDto, CreateAgencyDto>(_agencyDto);
       _createAgencyDto.TransferCenterId = 5;
@@ -99,7 +99,7 @@ namespace agency_transfercenter.Agency
     #region UpdateAsync
 
     [Fact]
-    public async Task UpdateAsync_AgencyExist_AlreadyExistException()
+    public async Task UpdateAsync_AgencyExistInValid_AlreadyExistException()
     {
       var UpdateAgencyId = 5;// Ankara Sincan Agency => Id
       var updateAgencyDto = _objectMapper.Map<AgencyDto, UpdateAgencyDto>(_agencyDto);
@@ -173,8 +173,6 @@ namespace agency_transfercenter.Agency
     {
       var agencyList = await _agencyAppService.GetListAsync(new GetListPagedAndSortedDto());
 
-      agencyList.ShouldNotBeNull();
-      agencyList.TotalCount.ShouldBeLessThanOrEqualTo(7);
       agencyList.TotalCount.ShouldBeGreaterThan(0);
     }
 

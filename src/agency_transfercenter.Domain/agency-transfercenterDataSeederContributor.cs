@@ -341,7 +341,6 @@ namespace agency_transfercenter
 
       var line1 = "line 1";
       await CheckForAddingLine(line1);
-
       await _lineRepository.InsertAsync(
         new Line()
         {
@@ -372,6 +371,18 @@ namespace agency_transfercenter
           Name = line3,
           IsActive = true,
           LineType = LineType.MainLine
+        },
+        autoSave: true
+      );
+
+      var line4 = "line 4";
+      await CheckForAddingLine(line4);
+      await _lineRepository.InsertAsync(
+        new Line()
+        {
+          Name = line4,
+          IsActive = true,
+          LineType = LineType.SubLine
         },
         autoSave: true
       );
