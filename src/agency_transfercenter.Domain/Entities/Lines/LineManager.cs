@@ -72,7 +72,7 @@ namespace agency_transfercenter.Entities.Lines
 
       var unitIdsLength = createLineDto.UnitId?.Length ?? 0;
       if (unitIdsLength != 0)
-        await CreateStationAsync(line, createLineDto.UnitId);//Test edildi
+        await CreateStationAsync(line, createLineDto.UnitId);
 
       var lineDto = _objectMapper.Map<Line, LineDto>(line);
 
@@ -84,7 +84,7 @@ namespace agency_transfercenter.Entities.Lines
       var isExistName = await _lineRepository.AnyAsync(x => x.Name == updateLine.Name && x.Id != id);
 
       if (isExistName)
-        throw new AlreadyExistException(typeof(Line), updateLine.Name);//Gerek Yok
+        throw new AlreadyExistException(typeof(Line), updateLine.Name);
 
       var existingLine = await _lineRepository.GetAsync(x => x.Id == id);
 
@@ -94,7 +94,7 @@ namespace agency_transfercenter.Entities.Lines
 
       var unitIdsLength = updateLine.UnitId?.Length ?? 0;
       if (unitIdsLength != 0)
-        await ReCreateStationAsync(line, updateLine.UnitId);//Burada işlemlerde endpoint olmadığı için teste gerek yok
+        await ReCreateStationAsync(line, updateLine.UnitId);
 
       var lineDto = _objectMapper.Map<Line, LineDto>(line);
 
@@ -123,7 +123,7 @@ namespace agency_transfercenter.Entities.Lines
       return new PagedResultDto<LineDto>(totalCount, lineDtoList);
     }
 
-    public async Task<LineWithStationsDto> GetLineWithStationsAsync(int lineId)//Test edildi
+    public async Task<LineWithStationsDto> GetLineWithStationsAsync(int lineId)//Test edildi, Unit test veya Moq
     {
       var line = await _lineRepository.FindAsync(lineId);
       if (line == null)
@@ -160,11 +160,11 @@ namespace agency_transfercenter.Entities.Lines
 
     #region Station
 
-    public async Task CreateStationAsync(Line line, int[] unitId)//Test edildi
+    public async Task CreateStationAsync(Line line, int[] unitId)//Test edildi, Unit test
     {
       CheckDuplicateInputs(unitId);//Test edildi
 
-      await CheckCountStation(line.Id, unitId);//validation hatasından dolayı buray test edemedik
+      await CheckCountStation(line.Id, unitId);//validation hatasından dolayı buray test edemedik,  Unit test
 
       if (line.LineType == LineType.MainLine)//Teste Gerek yok
         await CreateMainLineAsync(line.Id, unitId);
@@ -174,7 +174,7 @@ namespace agency_transfercenter.Entities.Lines
         await CreateSubLineAsync(line.Id, unitId);
     }
 
-    public async Task ReCreateStationAsync(Line line, int[] unitId)//Burada işlemlerde endpoint olmadığı için teste gerek yok
+    public async Task ReCreateStationAsync(Line line, int[] unitId)//Teste gerek yok
     {
       var isExistStation = await _stationRepository.GetListAsync(s => s.LineId == line.Id);
       if (isExistStation.Count() != 0)
@@ -200,7 +200,7 @@ namespace agency_transfercenter.Entities.Lines
 
     internal async Task CreateSubLineAsync(int lineId, int[] unitId)//Test edildi
     {
-      unitId = await CheckStationInputsValid(lineId, unitId);//Test edildi
+      unitId = await CheckStationInputsValid(lineId, unitId);
 
       var stationNumber = 1;
       foreach (var unit in unitId)
@@ -220,7 +220,7 @@ namespace agency_transfercenter.Entities.Lines
          .Where(tc => unitId.Contains(tc.Id))
          .Select(tc => tc.Id).ToListAsync();
 
-      if (transferCenterIds.Count() == 0 || transferCenterIds.Count() > 1)//Test edildi
+      if (transferCenterIds.Count() == 0 || transferCenterIds.Count() > 1)
         throw new BusinessException(AtcDomainErrorCodes.MustHaveOneTransferCenter);
 
       var transferCenterId = transferCenterIds.First();
@@ -236,7 +236,7 @@ namespace agency_transfercenter.Entities.Lines
 
       var allInTransferCenterAgencies = unitId.All(u => transferCenterWithAgencyIds.Contains(u));
 
-      if (!allInTransferCenterAgencies)//Test edildi
+      if (!allInTransferCenterAgencies)
         throw new BusinessException(AtcDomainErrorCodes.AgenciesMustBeAffiliatedToTheTransferCenter);
 
       return unitId;
@@ -272,7 +272,7 @@ namespace agency_transfercenter.Entities.Lines
       return maxStationNumber++;
     }
 
-    internal async Task CheckCountStation(int lineId, int[]? unitId)//validation hatasından dolayı burayı test edemedik
+    internal async Task CheckCountStation(int lineId, int[]? unitId)//validation hatası test edemedik, Unit test
     {
       var lineCount = await _stationRepository.CountAsync(s => s.LineId == lineId);
 

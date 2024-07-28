@@ -60,9 +60,9 @@ namespace agency_transfercenter.AppServices.TransferCenters
 
     public async Task<PagedResultDto<AgencyDto>> GetListAgenciesByTransferCenterIdAsync(int id)
     {
-      var transferCenters = await _transferCenterManager.GetListAgenciesByTransferCenterIdAsync(id);
+      var listAgency = await _transferCenterManager.GetListAgenciesByTransferCenterIdAsync(id);
 
-      return transferCenters;
+      return listAgency;
     }
   }
 }

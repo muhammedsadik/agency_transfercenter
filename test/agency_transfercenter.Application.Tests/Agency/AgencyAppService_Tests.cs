@@ -152,7 +152,7 @@ namespace agency_transfercenter.Agency
     }
 
     [Fact]
-    public async Task GetListAsync_Retrun_FilterValid()
+    public async Task GetListAsync_Retrun_FilterData()
     {
       var agencyList = await _agencyAppService.GetListAsync(new GetListPagedAndSortedDto() { Filter = "Diyarbakır" });
 
