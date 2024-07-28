@@ -374,6 +374,18 @@ public class agency_transfercenterTestDataSeedContributor : IDataSeedContributor
       },
       autoSave: true
     );
+
+    var line4 = "line 4";
+    await CheckForAddingLine(line4);
+    await _lineRepository.InsertAsync(
+      new Line()
+      {
+        Name = line4,
+        IsActive = true,
+        LineType = LineType.SubLine
+      },
+      autoSave: true
+    );
   }
 
   private async Task CheckForAddingLine(string lineName)

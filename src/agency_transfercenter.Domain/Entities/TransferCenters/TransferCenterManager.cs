@@ -99,13 +99,16 @@ namespace agency_transfercenter.Entities.TransferCenters
 
     public async Task<PagedResultDto<AgencyDto>> GetListAgenciesByTransferCenterIdAsync(int id)
     {
+      var isExistTransferCenter = await _transferCenterRepository.FindAsync(x => x.Id == id);
+
+      if (isExistTransferCenter == null)
+        throw new NotFoundException(typeof(TransferCenter), id.ToString());
+
       var agencies = await _agencyRepository.GetListAsync(x => x.TransferCenterId == id);
 
       var agencyDto = _objectMapper.Map<List<Agency>, List<AgencyDto>>(agencies);
 
-      var totalCount = await _agencyRepository.CountAsync(a=> a.TransferCenterId == id);
-
-      return new PagedResultDto<AgencyDto>(totalCount, agencyDto);
+      return new PagedResultDto<AgencyDto>(agencyDto.Count, agencyDto);
     }
 
   }
