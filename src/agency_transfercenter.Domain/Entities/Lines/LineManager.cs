@@ -34,8 +34,7 @@ namespace agency_transfercenter.Entities.Lines
     private readonly ILineRepository _lineRepository;
     private readonly IObjectMapper _objectMapper;
     private readonly ICurrentUser _currentUser;
-    private readonly IdentityUserManager _identityUserManager;
-    private readonly IdentityRoleManager _identityRoleManager;
+    private readonly IRepository<IdentityUser> _identityUserRepository;
 
     public LineManager(
       IObjectMapper objectMapper,
@@ -44,8 +43,7 @@ namespace agency_transfercenter.Entities.Lines
       ITransferCenterRepository transferCenterRepository,
       IAgencyRepository agencyRepository,
       ICurrentUser currentUser,
-      IdentityUserManager identityUserManager,
-      IdentityRoleManager identityRoleManager
+      IRepository<IdentityUser> identityUserRepository
       )
     {
       _transferCenterRepository = transferCenterRepository;
@@ -54,12 +52,11 @@ namespace agency_transfercenter.Entities.Lines
       _lineRepository = lineRepository;
       _objectMapper = objectMapper;
       _currentUser = currentUser;
-      _identityUserManager = identityUserManager;
-      _identityRoleManager = identityRoleManager;
+      _identityUserRepository = identityUserRepository;
     }
 
     #region Line
-    public async Task<LineDto> CreateAsync(CreateLineDto createLineDto)//Test edildi
+    public async Task<LineDto> CreateAsync(CreateLineDto createLineDto)
     {
       var isExistLine = await _lineRepository.AnyAsync(x => x.Name == createLineDto.Name);
 
@@ -79,7 +76,7 @@ namespace agency_transfercenter.Entities.Lines
       return lineDto;
     }
 
-    public async Task<LineDto> UpdateAsync(int id, UpdateLineDto updateLine)//Teste Gerek Yok
+    public async Task<LineDto> UpdateAsync(int id, UpdateLineDto updateLine)
     {
       var isExistName = await _lineRepository.AnyAsync(x => x.Name == updateLine.Name && x.Id != id);
 
@@ -101,7 +98,7 @@ namespace agency_transfercenter.Entities.Lines
       return lineDto;
     }
 
-    public async Task<PagedResultDto<LineDto>> GetListAsync(GetListPagedAndSortedDto input)//Teste Gerek Yok
+    public async Task<PagedResultDto<LineDto>> GetListAsync(GetListPagedAndSortedDto input)
     {
       var totalCount = input.Filter == null
         ? await _lineRepository.CountAsync()
@@ -123,17 +120,17 @@ namespace agency_transfercenter.Entities.Lines
       return new PagedResultDto<LineDto>(totalCount, lineDtoList);
     }
 
-    public async Task<LineWithStationsDto> GetLineWithStationsAsync(int lineId)//Test edildi, Unit test veya Moq
+    public async Task<LineWithStationsDto> GetLineWithStationsAsync(int lineId)
     {
       var line = await _lineRepository.FindAsync(lineId);
       if (line == null)
-        throw new NotFoundException(typeof(Line), lineId.ToString());//Test edildi
+        throw new NotFoundException(typeof(Line), lineId.ToString());
 
       var stations = await _stationRepository.GetListAsync(s => s.LineId == lineId);
       if (stations.Count == 0)
-        throw new NotFoundException(typeof(Station), lineId.ToString());//Test edildi
+        throw new NotFoundException(typeof(Station), lineId.ToString());
 
-      await CheckStationPermitRequest(stations);//Unit test veya Moq
+      await CheckStationPermitRequest(stations);
 
       var lineWithStationsDto = _objectMapper.Map<Line, LineWithStationsDto>(line);
 
@@ -142,12 +139,12 @@ namespace agency_transfercenter.Entities.Lines
       return lineWithStationsDto;
     }
 
-    public async Task CheckStationPermitRequest(List<Station> stations)//Unit test veya Moq
+    public async Task CheckStationPermitRequest(List<Station> stations)
     {
       if (!_currentUser.IsInRole(RoleConst.ViewAllLine))
       {
         var userId = _currentUser.Id.Value;
-        var user = await _identityUserManager.GetByIdAsync(userId);
+        var user = await _identityUserRepository.GetAsync(u => u.Id == userId);
         var userUnitId = user.GetProperty<int>(UserConst.UserUnitId);
 
         if (!stations.Any(x => x.UnitId == userUnitId))
@@ -160,21 +157,21 @@ namespace agency_transfercenter.Entities.Lines
 
     #region Station
 
-    public async Task CreateStationAsync(Line line, int[] unitId)//Test edildi, Unit test
+    public async Task CreateStationAsync(Line line, int[] unitId)
     {
-      CheckDuplicateInputs(unitId);//Test edildi
+      CheckDuplicateInputs(unitId);
 
-      await CheckCountStation(line.Id, unitId);//validation hatasından dolayı buray test edemedik,  Unit test
+      await CheckCountStation(line.Id, unitId);
 
-      if (line.LineType == LineType.MainLine)//Teste Gerek yok
+      if (line.LineType == LineType.MainLine)
         await CreateMainLineAsync(line.Id, unitId);
 
 
-      if (line.LineType == LineType.SubLine)//Test edildi
+      if (line.LineType == LineType.SubLine)
         await CreateSubLineAsync(line.Id, unitId);
     }
 
-    public async Task ReCreateStationAsync(Line line, int[] unitId)//Teste gerek yok
+    public async Task ReCreateStationAsync(Line line, int[] unitId)
     {
       var isExistStation = await _stationRepository.GetListAsync(s => s.LineId == line.Id);
       if (isExistStation.Count() != 0)
@@ -183,7 +180,7 @@ namespace agency_transfercenter.Entities.Lines
       await CreateStationAsync(line, unitId);
     }
 
-    internal async Task CreateMainLineAsync(int lineId, int[] unitId)//Teste Gerek yok
+    internal async Task CreateMainLineAsync(int lineId, int[] unitId)
     {
       var stationNumber = 1;
       foreach (var unit in unitId)
@@ -198,7 +195,7 @@ namespace agency_transfercenter.Entities.Lines
       }
     }
 
-    internal async Task CreateSubLineAsync(int lineId, int[] unitId)//Test edildi
+    internal async Task CreateSubLineAsync(int lineId, int[] unitId)
     {
       unitId = await CheckStationInputsValid(lineId, unitId);
 
@@ -212,7 +209,7 @@ namespace agency_transfercenter.Entities.Lines
       }
     }
 
-    internal async Task<int[]> CheckStationInputsValid(int lineId, int[] unitId)//Test edildi
+    internal async Task<int[]> CheckStationInputsValid(int lineId, int[] unitId)
     {
       var queryableTransferCenter = await _transferCenterRepository.GetQueryableAsync();
 
@@ -242,7 +239,7 @@ namespace agency_transfercenter.Entities.Lines
       return unitId;
     }
 
-    internal void CheckDuplicateInputs(int[] unitId)//Test edildi
+    internal void CheckDuplicateInputs(int[] unitId)
     {
       var duplicates = unitId.GroupBy(x => x)
         .Where(u => u.Count() > 1).Select(u => u.Key).ToList();
@@ -254,7 +251,7 @@ namespace agency_transfercenter.Entities.Lines
       }
     }
 
-    internal async Task<int> StationNumberGenerator(int lineId)//Kullanılmadı
+    internal async Task<int> StationNumberGenerator(int lineId)
     {
       if (await _stationRepository.CountAsync(x => x.LineId == lineId) <= 0)
         return 1;
@@ -272,7 +269,7 @@ namespace agency_transfercenter.Entities.Lines
       return maxStationNumber++;
     }
 
-    internal async Task CheckCountStation(int lineId, int[]? unitId)//validation hatası test edemedik, Unit test
+    internal async Task CheckCountStation(int lineId, int[]? unitId)
     {
       var lineCount = await _stationRepository.CountAsync(s => s.LineId == lineId);
 

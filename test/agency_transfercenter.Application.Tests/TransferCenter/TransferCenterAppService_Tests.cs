@@ -19,7 +19,7 @@ using Xunit;
 
 namespace agency_transfercenter.TransferCenter
 {
-  public class TransferCenterAppService_Tests<TStartupModule> : agency_transfercenterApplicationTestBase<TStartupModule>
+  public abstract class TransferCenterAppService_Tests<TStartupModule> : agency_transfercenterApplicationTestBase<TStartupModule>
     where TStartupModule : IAbpModule
   {
     private readonly TransferCenterAppService _transferCenterAppService;
@@ -61,7 +61,6 @@ namespace agency_transfercenter.TransferCenter
       {
         await _transferCenterAppService.CreateAsync(_createTransferCenterDto);
       });
-
     }
     
     [Fact]
@@ -116,7 +115,6 @@ namespace agency_transfercenter.TransferCenter
       await Assert.ThrowsAsync<NotFoundException>(async () =>
       {
         await _transferCenterAppService.GetListAgenciesByTransferCenterIdAsync(transferCenterId);
-
       });
     }
 
