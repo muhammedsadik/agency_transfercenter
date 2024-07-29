@@ -69,7 +69,7 @@ namespace agency_transfercenter.Line
       };
     }
 
-    [Fact]                //User rolde var
+    [Fact]               
     public async Task GetLineWithStationsAsync_CheckStationPermitRequest_UserRoleValid_NoAction()
     {
       _currentUser.IsInRole(RoleConst.ViewAllLine).Returns(true);
@@ -82,8 +82,8 @@ namespace agency_transfercenter.Line
       Assert.Null(exception);
     }
 
-    [Fact]                //User Stationda yok => geçersiz istek
-    public async Task GetLineWithStationsAsync_CheckStationPermitRequest_UserInUnitInValid_BusinessException()
+    [Fact]           
+    public async Task GetLineWithStationsAsync_CheckStationPermitRequest_UserUnitInValid_BusinessException()
     {
       var userMehmet = await _userRepository.GetAsync(u => u.Email == "mehmet@gmail.com");//unit id ye sahip değil
 
@@ -100,7 +100,7 @@ namespace agency_transfercenter.Line
       });
     }
 
-    [Fact]               //User Stationda var
+    [Fact]              
     public async Task GetLineWithStationsAsync_CheckStationPermitRequest_UserInUnit_NoAction()
     {
       var userOmer = await _userRepository.GetAsync(u => u.Email == "omer@gmail.com");//4 numaraya sahip
