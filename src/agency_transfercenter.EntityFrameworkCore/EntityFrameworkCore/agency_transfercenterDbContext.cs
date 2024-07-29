@@ -86,7 +86,6 @@ public class agency_transfercenterDbContext :
 
       b.HasMany(x => x.Stations).WithOne().HasForeignKey(x => x.LineId).IsRequired();
 
-      //b.HasMany(x => x.Station).WithMany(x => x.Line);  //many-to-many
     });
 
 

@@ -197,7 +197,7 @@ namespace agency_transfercenter.Entities.Lines
 
     internal async Task CreateSubLineAsync(int lineId, int[] unitId)
     {
-      unitId = await CheckStationInputsValid(lineId, unitId);
+      unitId = await CheckStationInputsValid(unitId);
 
       var stationNumber = 1;
       foreach (var unit in unitId)
@@ -209,7 +209,7 @@ namespace agency_transfercenter.Entities.Lines
       }
     }
 
-    internal async Task<int[]> CheckStationInputsValid(int lineId, int[] unitId)
+    internal async Task<int[]> CheckStationInputsValid(int[] unitId)
     {
       var queryableTransferCenter = await _transferCenterRepository.GetQueryableAsync();
 

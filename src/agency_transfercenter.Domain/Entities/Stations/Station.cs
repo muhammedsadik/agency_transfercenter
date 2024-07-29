@@ -32,7 +32,7 @@ namespace agency_transfercenter.Entities.Stations
     {
       LineId = lineId;
       UnitId = unitId;
-      StationNumber = stationNumber; //bunu burada yaparken update için  kullana bilirsin ve bu key bilgisini de sorgu için kullana bilirsin
+      StationNumber = stationNumber;
     }
    
     public override object[] GetKeys()
