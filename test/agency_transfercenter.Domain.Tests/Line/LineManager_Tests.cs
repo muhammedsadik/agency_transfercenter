@@ -31,7 +31,6 @@ namespace agency_transfercenter.Line
     private readonly ICurrentUser _currentUser;
     private readonly IObjectMapper _objectMapper;
     private readonly IRepository<IdentityUser> _userRepository;
-    private readonly IRepository<IdentityUser> _identityUserRepository;
     private readonly ITransferCenterRepository _transferCenterRepository;
     private readonly IAgencyRepository _agencyRepository;
     private readonly ILineRepository _lineRepository;
@@ -44,7 +43,6 @@ namespace agency_transfercenter.Line
       _currentUser = Substitute.For<ICurrentUser>();
       _stationRepository = Substitute.For<IRepository<Station>>();
       _userRepository = GetRequiredService<IRepository<IdentityUser>>();
-      _identityUserRepository = Substitute.For<IRepository<IdentityUser>>();
       _lineRepository = Substitute.For<ILineRepository>();
       _transferCenterRepository = Substitute.For<ITransferCenterRepository>();
       _agencyRepository = Substitute.For<IAgencyRepository>();
@@ -57,7 +55,7 @@ namespace agency_transfercenter.Line
         _transferCenterRepository,
         _agencyRepository,
         _currentUser,
-        _identityUserRepository
+        _userRepository
       );
 
       _stations = new List<Station>()
@@ -91,9 +89,6 @@ namespace agency_transfercenter.Line
 
       _currentUser.Id.Returns(userMehmet.Id);
 
-      _identityUserRepository.GetAsync(Arg.Is<Expression<Func<IdentityUser, bool>>>(expr => expr.Compile().Invoke(userMehmet))).Returns(userMehmet);
-
-
       await Assert.ThrowsAsync<BusinessException>(async () =>
       {
         await _lineManager.CheckStationPermitRequest(_stations);
@@ -103,13 +98,11 @@ namespace agency_transfercenter.Line
     [Fact]              
     public async Task GetLineWithStationsAsync_CheckStationPermitRequest_UserInUnit_NoAction()
     {
-      var userOmer = await _userRepository.GetAsync(u => u.Email == "omer@gmail.com");//4 numaraya sahip
+      var userOmer = await _userRepository.GetAsync(u => u.Email == "omer@gmail.com");//4 numara unit id ye sahip
 
       _currentUser.IsInRole(RoleConst.ViewAllLine).Returns(false);
 
       _currentUser.Id.Returns(userOmer.Id);
-
-      _identityUserRepository.GetAsync(Arg.Is<Expression<Func<IdentityUser, bool>>>(expr => expr.Compile().Invoke(userOmer))).Returns(userOmer);
 
       var exception = await Record.ExceptionAsync(async () =>
       {
