@@ -51,9 +51,9 @@ namespace agency_transfercenter.Entities.Agencies
 
     public async Task<AgencyDto> UpdateAsync(int id, UpdateAgencyDto updateAgency)
     {
-      var isExistAgency = await _agencyRepository.AnyAsync(x => x.UnitName == updateAgency.UnitName && x.Id != id);
+      var isExistAgency = await _agencyRepository.GetAsync(x => x.UnitName == updateAgency.UnitName && x.Id != id);
 
-      if (isExistAgency)
+      if (isExistAgency != null)
         throw new AlreadyExistException(typeof(Agency), updateAgency.UnitName);
 
       var IsExistTransferCenter = await _transferCenterRepository.AnyAsync(x => x.Id == updateAgency.TransferCenterId);

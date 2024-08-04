@@ -57,184 +57,185 @@ namespace agency_transfercenter.Web;
     )]
 public class agency_transfercenterWebModule : AbpModule
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context)
-    {
-        var hostingEnvironment = context.Services.GetHostingEnvironment();
-        var configuration = context.Services.GetConfiguration();
+  public override void PreConfigureServices(ServiceConfigurationContext context)
+  {
+    var hostingEnvironment = context.Services.GetHostingEnvironment();
+    var configuration = context.Services.GetConfiguration();
 
-        context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
-        {
-            options.AddAssemblyResource(
-                typeof(agency_transfercenterResource),
-                typeof(agency_transfercenterDomainModule).Assembly,
-                typeof(agency_transfercenterDomainSharedModule).Assembly,
-                typeof(agency_transfercenterApplicationModule).Assembly,
-                typeof(agency_transfercenterApplicationContractsModule).Assembly,
-                typeof(agency_transfercenterWebModule).Assembly
-            );
+    context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
+    {
+      options.AddAssemblyResource(
+              typeof(agency_transfercenterResource),
+              typeof(agency_transfercenterDomainModule).Assembly,
+              typeof(agency_transfercenterDomainSharedModule).Assembly,
+              typeof(agency_transfercenterApplicationModule).Assembly,
+              typeof(agency_transfercenterApplicationContractsModule).Assembly,
+              typeof(agency_transfercenterWebModule).Assembly
+          );
+    });
+
+    PreConfigure<OpenIddictBuilder>(builder =>
+    {
+      builder.AddValidation(options =>
+          {
+          options.AddAudiences("agency_transfercenter");
+          options.UseLocalServer();
+          options.UseAspNetCore();
         });
+    });
 
-        PreConfigure<OpenIddictBuilder>(builder =>
-        {
-            builder.AddValidation(options =>
-            {
-                options.AddAudiences("agency_transfercenter");
-                options.UseLocalServer();
-                options.UseAspNetCore();
-            });
-        });
-
-        if (!hostingEnvironment.IsDevelopment())
-        {
-            PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
-            {
-                options.AddDevelopmentEncryptionAndSigningCertificate = false;
-            });
-
-            PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
-            {
-                serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "2cb01f41-c2cb-4780-bab6-f0bb86b11f82");
-            });
-        }
-    }
-
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    if (!hostingEnvironment.IsDevelopment())
     {
-        var hostingEnvironment = context.Services.GetHostingEnvironment();
-        var configuration = context.Services.GetConfiguration();
+      PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
+      {
+        options.AddDevelopmentEncryptionAndSigningCertificate = false;
+      });
 
-        ConfigureAuthentication(context);
-        ConfigureUrls(configuration);
-        ConfigureBundles();
-        ConfigureAutoMapper();
-        ConfigureVirtualFileSystem(hostingEnvironment);
-        ConfigureNavigationServices();
-        ConfigureAutoApiControllers();
-        ConfigureSwaggerServices(context.Services);
+      PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
+      {
+        serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "2cb01f41-c2cb-4780-bab6-f0bb86b11f82");
+      });
     }
+  }
 
-    private void ConfigureAuthentication(ServiceConfigurationContext context)
-    {
-        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-        context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
-        {
-            options.IsDynamicClaimsEnabled = true;
-        });
-    }
+  public override void ConfigureServices(ServiceConfigurationContext context)
+  {
+    var hostingEnvironment = context.Services.GetHostingEnvironment();
+    var configuration = context.Services.GetConfiguration();
 
-    private void ConfigureUrls(IConfiguration configuration)
-    {
-        Configure<AppUrlOptions>(options =>
-        {
-            options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
-        });
-    }
+    ConfigureAuthentication(context);
+    ConfigureUrls(configuration);
+    ConfigureBundles();
+    ConfigureAutoMapper();
+    ConfigureVirtualFileSystem(hostingEnvironment);
+    ConfigureNavigationServices();
+    ConfigureAutoApiControllers();
+    ConfigureSwaggerServices(context.Services);
+  }
 
-    private void ConfigureBundles()
+  private void ConfigureAuthentication(ServiceConfigurationContext context)
+  {
+    context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+    context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
     {
-        Configure<AbpBundlingOptions>(options =>
-        {
-            options.StyleBundles.Configure(
-                LeptonXLiteThemeBundles.Styles.Global,
-                bundle =>
-                {
-                    bundle.AddFiles("/global-styles.css");
-                }
-            );
-        });
-    }
+      options.IsDynamicClaimsEnabled = true;
+    });
+  }
 
-    private void ConfigureAutoMapper()
+  private void ConfigureUrls(IConfiguration configuration)
+  {
+    Configure<AppUrlOptions>(options =>
     {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<agency_transfercenterWebModule>();
-        });
-    }
+      options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
+    });
+  }
 
-    private void ConfigureVirtualFileSystem(IWebHostEnvironment hostingEnvironment)
+  private void ConfigureBundles()
+  {
+    Configure<AbpBundlingOptions>(options =>
     {
-        if (hostingEnvironment.IsDevelopment())
-        {
-            Configure<AbpVirtualFileSystemOptions>(options =>
-            {
-                options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}agency_transfercenter.Domain.Shared"));
-                options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}agency_transfercenter.Domain"));
-                options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}agency_transfercenter.Application.Contracts"));
-                options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}agency_transfercenter.Application"));
-                options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterWebModule>(hostingEnvironment.ContentRootPath);
-            });
-        }
-    }
-
-    private void ConfigureNavigationServices()
-    {
-        Configure<AbpNavigationOptions>(options =>
-        {
-            options.MenuContributors.Add(new agency_transfercenterMenuContributor());
-        });
-    }
-
-    private void ConfigureAutoApiControllers()
-    {
-        Configure<AbpAspNetCoreMvcOptions>(options =>
-        {
-            options.ConventionalControllers.Create(typeof(agency_transfercenterApplicationModule).Assembly);
-        });
-    }
-
-    private void ConfigureSwaggerServices(IServiceCollection services)
-    {
-        services.AddAbpSwaggerGen(
-            options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "agency_transfercenter API", Version = "v1" });
-                options.DocInclusionPredicate((docName, description) => true);
-                options.CustomSchemaIds(type => type.FullName);
+      options.StyleBundles.Configure(
+              LeptonXLiteThemeBundles.Styles.Global,
+              bundle =>
+              {
+              bundle.AddFiles("/global-styles.css");
             }
-        );
-    }
+          );
+    });
+  }
 
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+  private void ConfigureAutoMapper()
+  {
+    Configure<AbpAutoMapperOptions>(options =>
     {
-        var app = context.GetApplicationBuilder();
-        var env = context.GetEnvironment();
+      options.AddMaps<agency_transfercenterWebModule>();
+    });
+  }
 
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-
-        app.UseAbpRequestLocalization();
-
-        if (!env.IsDevelopment())
-        {
-            app.UseErrorPage();
-        }
-
-        app.UseCorrelationId();
-        app.UseStaticFiles();
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAbpOpenIddictValidation();
-
-        if (MultiTenancyConsts.IsEnabled)
-        {
-            app.UseMultiTenancy();
-        }
-
-        app.UseUnitOfWork();
-        app.UseDynamicClaims();
-        app.UseAuthorization();
-
-        app.UseSwagger();
-        app.UseAbpSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "agency_transfercenter API");
-        });
-
-        app.UseAuditing();
-        app.UseAbpSerilogEnrichers();
-        app.UseConfiguredEndpoints();
+  private void ConfigureVirtualFileSystem(IWebHostEnvironment hostingEnvironment)
+  {
+    if (hostingEnvironment.IsDevelopment())
+    {
+      Configure<AbpVirtualFileSystemOptions>(options =>
+      {
+        options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}agency_transfercenter.Domain.Shared"));
+        options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}agency_transfercenter.Domain"));
+        options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}agency_transfercenter.Application.Contracts"));
+        options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}agency_transfercenter.Application"));
+        options.FileSets.ReplaceEmbeddedByPhysical<agency_transfercenterWebModule>(hostingEnvironment.ContentRootPath);
+      });
     }
+  }
+
+  private void ConfigureNavigationServices()
+  {
+    Configure<AbpNavigationOptions>(options =>
+    {
+      options.MenuContributors.Add(new agency_transfercenterMenuContributor());
+    });
+  }
+
+  private void ConfigureAutoApiControllers()
+  {
+    Configure<AbpAspNetCoreMvcOptions>(options =>
+    {
+      options.ConventionalControllers.Create(typeof(agency_transfercenterApplicationModule).Assembly);
+    });
+  }
+
+  private void ConfigureSwaggerServices(IServiceCollection services)
+  {
+    services.AddAbpSwaggerGen(
+        options =>
+        {
+          options.SwaggerDoc("v1", new OpenApiInfo { Title = "agency_transfercenter API", Version = "v1" });
+          options.DocInclusionPredicate((docName, description) => true);
+          options.CustomSchemaIds(type => type.FullName);
+          options.HideAbpEndpoints();
+        }
+    );
+  }
+
+  public override void OnApplicationInitialization(ApplicationInitializationContext context)
+  {
+    var app = context.GetApplicationBuilder();
+    var env = context.GetEnvironment();
+
+    if (env.IsDevelopment())
+    {
+      app.UseDeveloperExceptionPage();
+    }
+
+    app.UseAbpRequestLocalization();
+
+    if (!env.IsDevelopment())
+    {
+      app.UseErrorPage();
+    }
+
+    app.UseCorrelationId();
+    app.UseStaticFiles();
+    app.UseRouting();
+    app.UseAuthentication();
+    app.UseAbpOpenIddictValidation();
+
+    if (MultiTenancyConsts.IsEnabled)
+    {
+      app.UseMultiTenancy();
+    }
+
+    app.UseUnitOfWork();
+    app.UseDynamicClaims();
+    app.UseAuthorization();
+
+    app.UseSwagger();
+    app.UseAbpSwaggerUI(options =>
+    {
+      options.SwaggerEndpoint("/swagger/v1/swagger.json", "agency_transfercenter API");
+    });
+
+    app.UseAuditing();
+    app.UseAbpSerilogEnrichers();
+    app.UseConfiguredEndpoints();
+  }
 }
