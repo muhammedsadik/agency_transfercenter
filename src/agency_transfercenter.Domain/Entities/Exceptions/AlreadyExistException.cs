@@ -34,15 +34,35 @@ namespace agency_transfercenter.Entities.Exceptions
   }
 
 
-/*
-   public class AlreadyExistException : BusinessException
-  {
-    public AlreadyExistException(string unit, string name) : base(TCDomainErrorCodes.AlreadyExists)
+  /*
+     public class AlreadyExistException : BusinessException
     {
-      WithData("unit", name);
+      public AlreadyExistException(string unit, string name) : base(TCDomainErrorCodes.AlreadyExists)
+      {
+        WithData("unit", name);
+      }
+    }     
+  */
+  /*
+   
+   public class AlreadyExistException : BusinessException, ILocalizeErrorMessage
+  {
+    public Type EntityType { get; }
+  
+    public AlreadyExistException(Type entityType) : base(AtcDomainErrorCodes.AlreadyExists)
+    {
+      EntityType = entityType;
     }
-  }     
-*/
 
+    public string LocalizeMessage(LocalizationContext context)
+    {
+      var localizer = context.LocalizerFactory.Create<agency_transfercenterResource>();
+
+      Data["EntityType"] = localizer[EntityType.Name!].Value;
+
+      return localizer[Code!, Data["EntityType"]];
+    }
+
+  */
 
 }

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Values;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace agency_transfercenter.Entities.Addresses
 {
